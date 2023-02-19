@@ -1,7 +1,28 @@
-import React from 'react'
+import React from "react";
 
-export default function Day() {
+type dayProps = {
+  completed: boolean;
+  uncompleted: boolean;
+  weekDay: string;
+  dayNumber: number;
+};
+
+export default function Day({
+  completed,
+  uncompleted,
+  weekDay,
+  dayNumber,
+}: dayProps) {
   return (
-    <div>Day</div>
-  )
+    <div>
+      <div>
+        <span>{weekDay}</span>
+        <span>{dayNumber}</span>
+      </div>
+      <div>
+        <span>{completed}</span>
+        <span>{uncompleted}</span>
+      </div>
+    </div>
+  );
 }

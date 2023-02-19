@@ -1,7 +1,16 @@
 import React from 'react'
+import AddTaskBtn from '../components/AddTaskBtn'
+import DaysList from '../components/DaysList'
+import Tasks from '../components/Tasks'
+import 'firebase/firestore'
 
-export default function tassker() {
+export default function Tassker() {
+  
   return (
-    <div>tassker</div>
+    <>
+        <DaysList />
+        <Tasks />
+        <AddTaskBtn />
+    </>
   )
 }

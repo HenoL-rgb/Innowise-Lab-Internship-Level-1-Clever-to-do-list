@@ -1,7 +1,7 @@
 import React from 'react'
 
-export default function login() {
+export default function Sogin() {
   return (
-    <div>login</div>
+    <div>S</div>
   )
 }
