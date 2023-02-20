@@ -6,6 +6,8 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  setPersistence,
+  browserSessionPersistence,
 } from "firebase/auth";
 import Form from "../components/Form";
 import { useAuth } from "../hooks/useAuth";
@@ -16,6 +18,7 @@ export default function Login() {
 
   function handleLogin(email: string, password: string) {
     const auth = getAuth();
+    
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;

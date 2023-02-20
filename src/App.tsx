@@ -13,6 +13,7 @@ import {
 import { Outlet } from "react-router";
 import Sign from "./pages/Sign";
 import Login from "./pages/Login";
+import Task from "./pages/Task";
 
 const AppWrapper = styled.div`
   width: 762px;
@@ -33,6 +34,7 @@ const router = createBrowserRouter(
       <Route index element={<Tassker />} />
       <Route path="/login" element={<Login />} />
       <Route path="/sign" element={<Sign />} />
+      <Route path="/task" element={<Task />} />
     </Route>
   )
 );

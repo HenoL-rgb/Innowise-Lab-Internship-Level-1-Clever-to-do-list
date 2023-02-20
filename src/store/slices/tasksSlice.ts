@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 type tasksTypes = {
-  tasks: any[];
+  tasks: any[],
 };
 const initialState: tasksTypes = {
   tasks: [],
@@ -12,7 +12,8 @@ const tasksSlice = createSlice({
   initialState,
   reducers: {
     addTask(state, action) {
-      state.tasks = [...action.payload.tasks];
+        console.log(action.payload)
+      state.tasks = [...state.tasks, ...action.payload];
     },
     removeTask(state, action) {
       state.tasks = state.tasks.filter((task) => task.id !== action.payload.id);

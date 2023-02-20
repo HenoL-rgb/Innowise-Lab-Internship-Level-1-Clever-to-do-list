@@ -17,27 +17,27 @@ const DayWrapper = styled.div`
 type dayProps = {
   completed: boolean,
   uncompleted: boolean,
-  weekDay: string,
-  day: number,
-  id: number,
+  day: Date,
   isCurrent: boolean,
+  id: number,
   onClick: (id: number) => void,
 };
 
 export default function Day({
   completed,
   uncompleted,
-  weekDay,
   day,
-  id,
   isCurrent,
+  id,
   onClick
 }: dayProps) {
+
+
   return (
     <div onClick={() => onClick(id)}>
       <DayWrapper color={isCurrent ? 'red' : 'black'}>
-        <span>{weekDay}</span>
-        <span>{day}</span>
+        <span>{getWeekDay(day)}</span>
+        <span>{day.getDate()}</span>
       </DayWrapper>
       <div>
         <span>{completed}</span>
@@ -45,4 +45,8 @@ export default function Day({
       </div>
     </div>
   );
+}
+
+function getWeekDay(day: Date) {
+  return day.toString().split(' ')[0]
 }

@@ -2,15 +2,13 @@ import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { db } from '../firebase'
 import { doc, setDoc, addDoc, collection } from 'firebase/firestore'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../hooks/useAuth'
+import Login from './Login'
 
-type taskProps = {
-    title: string,
-    description?: string,
-    mode: string,
-}
-export default function Task({title = '', description = '', mode='save'} : taskProps) {
-    const [taskTitle, setTaskTitle] = useState(title || 'New task')
-    const [taskDescription, setTaskDescription] = useState(description || ''); 
+
+export default function Task() {
+
     const {
         register,
         formState: {
@@ -19,6 +17,10 @@ export default function Task({title = '', description = '', mode='save'} : taskP
         handleSubmit,
         reset,
     } = useForm()
+
+    const { isAuth, email } = useAuth();
+
+    const navigate = useNavigate()
 
     // function handleInputTitle(e: HTMLInputElement): void {
     //     if(!e.target) return;
@@ -34,8 +36,11 @@ export default function Task({title = '', description = '', mode='save'} : taskP
         reset()
     }
   
-    return (
+    return isAuth ? (
     <>
+        <div>
+            <button onClick={() => navigate('/')}>Back</button>
+        </div>
         <form onSubmit={handleSubmit(onSubmit)}>
             <input
                 {...register('title', {
@@ -43,9 +48,11 @@ export default function Task({title = '', description = '', mode='save'} : taskP
 
                 })}
             />
-            <input type="submit" value={mode} />
+            <input type="submit" />
         </form>
     </>
+  ) : (
+    <Login />
   )
 }
 

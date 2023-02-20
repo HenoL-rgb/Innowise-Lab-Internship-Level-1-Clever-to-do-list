@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import Day from "./Day";
 import styled from "styled-components";
 import { useDays } from "../hooks/useDays";
+import { setCurrentDay } from "../store/slices/currentDaySlice";
+import { useAppDispatch } from "../hooks/redux-hooks";
+import { dayType } from "../hooks/useTasks";
 
 const DaysListWrapper = styled.ul`
   display: flex;
@@ -13,18 +16,32 @@ const DaysListWrapper = styled.ul`
   padding-top: 10px;
 `;
 
-export default function DaysList() {
+type daysListProps = {
+  days: dayType[]
+}
+
+export default function DaysList({days}: daysListProps) {
   const [page, setPage] = useState(1);
-  const [currentDay, setCurrentDay] = useState(0);
+  const [currDay, setCurrDay] = useState(0);
   const daysList = useDays(page);
   const [currentMonth, setCurrentMonth] = useState('February');
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    setCurrentMonth(getMonth(daysList[currentDay]))
-  }, [daysList, currentDay])
+    setCurrentMonth(getMonth(daysList[currDay]))
+  }, [daysList, currDay])
 
   function handleClick(id: number) {
-    setCurrentDay(id)
+    const day = daysList[id];
+    console.log(day)
+    setCurrDay(id)
+    dispatch(setCurrentDay({
+      day: day.getDate(),
+      weekDay: day.getDay(),
+      month: day.getMonth(),
+      year: day.getFullYear(),
+    }))
+    
   }
  
   return (
@@ -37,10 +54,9 @@ export default function DaysList() {
               <Day
                 completed={false}
                 uncompleted={false}
-                weekDay={getWeekDay(day)}
-                day={day.getDate()}
+                day={day}
                 id={index}
-                isCurrent={index === currentDay}
+                isCurrent={checkIsCurrent(day, daysList[currDay])}
                 onClick={handleClick}
               ></Day>
             </li>
@@ -61,7 +77,7 @@ function getMonth(day: Date) {
 }
 
 
-function isCurrent(day: Date, currentDay: Date) {
+function checkIsCurrent(day: Date, currentDay: Date) {
   return day.getDay() === currentDay.getDay() && day.getMonth() === currentDay.getMonth()
   && day.getDate() === currentDay.getDate();
 }
