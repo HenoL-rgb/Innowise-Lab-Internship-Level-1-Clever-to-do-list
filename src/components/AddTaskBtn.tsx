@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
 const AddButton = styled.button`
@@ -14,12 +14,11 @@ const AddButton = styled.button`
 
 export default function AddTaskBtn() {
 
+  const navigate = useNavigate();
+
   return (
-    <Link to={{
-      pathname: '/task',
-      
-    }}>
+      <Link to='/task'>
       <AddButton>New task</AddButton>
-    </Link>
+      </Link>
   )
 }

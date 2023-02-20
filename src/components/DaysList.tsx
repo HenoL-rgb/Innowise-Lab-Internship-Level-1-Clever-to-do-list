@@ -1,66 +1,67 @@
-import React from 'react'
-import Day from './Day'
-import styled from 'styled-components'
+import React, { useState, useEffect } from "react";
+import Day from "./Day";
+import styled from "styled-components";
+import { useDays } from "../hooks/useDays";
 
 const DaysListWrapper = styled.ul`
   display: flex;
   column-gap: 15px;
   list-style: none;
-`
+  overflow-x: scroll;
+  max-width: 762px;
+  padding-left: 20px;
+  padding-top: 10px;
+`;
 
 export default function DaysList() {
-  const days = [
-    {
-      weekDay: "Wed",
-      day: 4,
-      uncompleted: true,
-      completed: true,
-      id: 1,
-    },
-    {
-      weekDay: "Wed",
-      day: 4,
-      uncompleted: true,
-      completed: true,
-      id: 2,
-    },
-    {
-      weekDay: "Wed",
-      day: 4,
-      uncompleted: true,
-      completed: true,
-      id: 3,
-    },
-    {
-      weekDay: "Wed",
-      day: 4,
-      uncompleted: true,
-      completed: true,
-      id: 4,
-    },
-    {
-      weekDay: "Wed",
-      day: 4,
-      uncompleted: true,
-      completed: true,
-      id: 5,
-    },
-    {
-      weekDay: "Wed",
-      day: 4,
-      uncompleted: true,
-      completed: true,
-      id: 6,
-    },
-  ]
+  const [page, setPage] = useState(1);
+  const [currentDay, setCurrentDay] = useState(0);
+  const daysList = useDays(page);
+  const [currentMonth, setCurrentMonth] = useState('February');
+
+  useEffect(() => {
+    setCurrentMonth(getMonth(daysList[currentDay]))
+  }, [daysList, currentDay])
+
+  function handleClick(id: number) {
+    setCurrentDay(id)
+  }
+ 
   return (
     <div>
+      <h1 style={{textAlign: 'center'}}>{currentMonth}</h1>
       <DaysListWrapper>
-        {days.map(day => {
-          return <li key={day.id}><Day {...day}/></li>
+        {daysList.map((day, index) => {
+          return (
+            <li key={index}>
+              <Day
+                completed={false}
+                uncompleted={false}
+                weekDay={getWeekDay(day)}
+                day={day.getDate()}
+                id={index}
+                isCurrent={index === currentDay}
+                onClick={handleClick}
+              ></Day>
+            </li>
+          );
         })}
       </DaysListWrapper>
-      
     </div>
-  )
+  );
+}
+
+function getWeekDay(day: Date) {
+  return day.toString().split(' ')[0]
+}
+
+function getMonth(day: Date) {
+  if(!day) return ''
+  return day.toString().split(' ')[1]
+}
+
+
+function isCurrent(day: Date, currentDay: Date) {
+  return day.getDay() === currentDay.getDay() && day.getMonth() === currentDay.getMonth()
+  && day.getDate() === currentDay.getDate();
 }

@@ -8,7 +8,7 @@ type taskProps = {
     description?: string,
     mode: string,
 }
-export default function Task({title, description, mode} : taskProps) {
+export default function Task({title = '', description = '', mode='save'} : taskProps) {
     const [taskTitle, setTaskTitle] = useState(title || 'New task')
     const [taskDescription, setTaskDescription] = useState(description || ''); 
     const {

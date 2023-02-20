@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../hooks/redux-hooks";
-import userSlice, { setUser } from "../store/slices/userSlice";
+import { setUser } from "../store/slices/userSlice";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import Form from "../components/Form";
 

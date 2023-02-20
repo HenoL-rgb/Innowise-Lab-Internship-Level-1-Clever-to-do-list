@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import SignButton from "./SignButton";
 import { Link } from "react-router-dom";
 
 const StyledHeader = styled.div`

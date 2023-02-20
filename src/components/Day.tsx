@@ -9,16 +9,19 @@ const DayWrapper = styled.div`
   padding: 30px;
   border: 1px solid rgba(0,0,0,0.1);
   border-radius: 15px;
+  color: ${props => props.color};
 `
 
 
 
 type dayProps = {
-  completed: boolean;
-  uncompleted: boolean;
-  weekDay: string;
-  day: number;
+  completed: boolean,
+  uncompleted: boolean,
+  weekDay: string,
+  day: number,
   id: number,
+  isCurrent: boolean,
+  onClick: (id: number) => void,
 };
 
 export default function Day({
@@ -27,10 +30,12 @@ export default function Day({
   weekDay,
   day,
   id,
+  isCurrent,
+  onClick
 }: dayProps) {
   return (
-    <div>
-      <DayWrapper>
+    <div onClick={() => onClick(id)}>
+      <DayWrapper color={isCurrent ? 'red' : 'black'}>
         <span>{weekDay}</span>
         <span>{day}</span>
       </DayWrapper>
