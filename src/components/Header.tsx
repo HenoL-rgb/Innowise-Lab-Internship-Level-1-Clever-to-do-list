@@ -14,7 +14,6 @@ export default function Header() {
   return (
     <StyledHeader>
       <Link to='/sign'>
-        <SignButton mode="sign" />
       </Link>
     </StyledHeader>
   );

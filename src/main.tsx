@@ -5,6 +5,8 @@ import "./index.css";
 import "./firebase";
 import "firebase/firestore";
 import styled, { createGlobalStyle } from "styled-components";
+import { Provider } from "react-redux";
+import { store } from "./store/index";
 
 const Global = createGlobalStyle`
   * {
@@ -23,7 +25,9 @@ const Global = createGlobalStyle`
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
+    <Provider store={store}>
       <Global />
       <App />
+    </Provider>
   </React.StrictMode>
 );

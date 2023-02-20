@@ -31,8 +31,8 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Root />}>
       <Route index element={<Tassker />} />
-      <Route path="/sign" element={<Sign />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/sign" element={<Sign />} />
     </Route>
   )
 );
@@ -48,7 +48,6 @@ function App() {
 function Root() {
   return (
     <>
-      <Header />
       <Outlet />
     </>
   );
