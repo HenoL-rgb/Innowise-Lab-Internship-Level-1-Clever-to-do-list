@@ -1,24 +1,39 @@
 import React from "react";
+import styled from 'styled-components'
+
+const DayWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+  align-items: center;
+  padding: 30px;
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 15px;
+`
+
+
 
 type dayProps = {
   completed: boolean;
   uncompleted: boolean;
   weekDay: string;
-  dayNumber: number;
+  day: number;
+  id: number,
 };
 
 export default function Day({
   completed,
   uncompleted,
   weekDay,
-  dayNumber,
+  day,
+  id,
 }: dayProps) {
   return (
     <div>
-      <div>
+      <DayWrapper>
         <span>{weekDay}</span>
-        <span>{dayNumber}</span>
-      </div>
+        <span>{day}</span>
+      </DayWrapper>
       <div>
         <span>{completed}</span>
         <span>{uncompleted}</span>
