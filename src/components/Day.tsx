@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { calendarDaysType } from "../hooks/useDays";
 
 const DayWrapper = styled.div`
   display: flex;
@@ -12,12 +13,28 @@ const DayWrapper = styled.div`
   min-width: 90px;
   color: ${(props) => props.theme.color};
   background: ${(props) => props.theme.bgColor};
+  cursor: pointer;
 `;
+
+const StyledCircle = styled.div`
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: ${props => props.color};
+`
+
+const CompletionList = styled.div`
+  padding-top: 5px;
+  display: flex;
+  column-gap: 5px;
+  height: 10px;
+  justify-content: center;
+`
 
 type dayProps = {
   completed: boolean;
   uncompleted: boolean;
-  day: Date;
+  date: calendarDaysType;
   isCurrent: boolean;
   id: number;
   onClick: (id: number) => void;
@@ -26,7 +43,7 @@ type dayProps = {
 export default function Day({
   completed,
   uncompleted,
-  day,
+  date,
   isCurrent,
   id,
   onClick,
@@ -36,16 +53,17 @@ export default function Day({
     bgColor: isCurrent ? "black" : "white",
   };
 
+  console.log(completed, uncompleted)
   return (
     <div onClick={() => onClick(id)}>
       <DayWrapper theme={theme}>
-        <span>{getWeekDay(day)}</span>
-        <span>{day.getDate()}</span>
+        <span>{getWeekDay(new Date(date.day, date.month, date.year))}</span>
+        <span>{date.day}</span>
       </DayWrapper>
-      <div>
-        <span>{completed}</span>
-        <span>{uncompleted}</span>
-      </div>
+      <CompletionList>
+        {completed ? <StyledCircle color="#fc6722"/> : ''}
+        {uncompleted ? <StyledCircle color="#fdc448" /> : ''}
+      </CompletionList>
     </div>
   );
 }

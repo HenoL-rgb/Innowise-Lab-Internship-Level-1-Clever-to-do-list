@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Day from "./Day";
 import styled from "styled-components";
-import { useDays } from "../hooks/useDays";
+import { calendarDaysType, useDays } from "../hooks/useDays";
 import { setCurrentDay } from "../store/slices/currentDaySlice";
 import { useAppDispatch } from "../hooks/redux-hooks";
 import { dayType } from "../hooks/useTasks";
@@ -30,7 +30,7 @@ export default function DaysList({ days }: daysListProps) {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    setCurrentMonth(getMonth(daysList[currDay]));
+    //setCurrentMonth(getMonth(daysList[currDay]));
   }, [daysList, currDay]);
 
   function handleClick(id: number) {
@@ -39,17 +39,12 @@ export default function DaysList({ days }: daysListProps) {
     updateCurrentDay(dayData);
   }
 
-  function updateCurrentDay(dayData: Date) {
-    const dayToFind = {
-      day: dayData.getDate(),
-      month: dayData.getMonth(),
-      year: dayData.getFullYear(),
-    };
+  function updateCurrentDay(dayData: calendarDaysType) {
     const dayDb = days.find(
       (t) =>
-        t.day === dayToFind.day &&
-        t.month === dayToFind.month &&
-        t.year === dayToFind.year
+        t.day === dayData.day &&
+        t.month === dayData.month &&
+        t.year === dayData.year
     );
 
     if (dayDb) {
@@ -58,29 +53,45 @@ export default function DaysList({ days }: daysListProps) {
           ...dayDb,
         })
       );
-    } else {
-      dispatch(
-        setCurrentDay({
-          ...dayToFind,
-          id: "",
-        })
-      );
+      return;
     }
+    dispatch(
+      setCurrentDay({
+        ...dayData,
+      })
+    );
   }
 
   return (
     <div>
       <h1 style={{ textAlign: "center" }}>{currentMonth}</h1>
       <DaysListWrapper>
-        {daysList.map((day, index) => {
+        {daysList.map((date, index) => {
+          let completed = false;
+          let uncompleted = false;
+          const dayDb = days.find(
+            (t) =>
+              t.day === date.day &&
+              t.month === date.month &&
+              t.year === date.year
+          );
+          if (dayDb) {
+            completed = dayDb.tasks.find((task) => task.completed === true)
+              ? true
+              : false;
+            uncompleted = dayDb.tasks.find((task) => task.completed === false)
+              ? true
+              : false;
+          }
+
           return (
             <li key={index}>
               <Day
-                completed={false}
-                uncompleted={false}
-                day={day}
+                completed={completed}
+                uncompleted={uncompleted}
+                date={date}
                 id={index}
-                isCurrent={checkIsCurrent(day, daysList[currDay])}
+                isCurrent={checkIsCurrent(date, daysList[currDay])}
                 onClick={handleClick}
               ></Day>
             </li>
@@ -100,10 +111,14 @@ function getMonth(day: Date) {
   return day.toString().split(" ")[1];
 }
 
-function checkIsCurrent(day: Date, currentDay: Date) {
+function checkIsCurrent(date: calendarDaysType, currentDay: calendarDaysType) {
   return (
-    day.getDay() === currentDay.getDay() &&
-    day.getMonth() === currentDay.getMonth() &&
-    day.getDate() === currentDay.getDate()
+    date.day === currentDay.day &&
+    date.month === currentDay.month &&
+    date.year === currentDay.year
   );
+}
+
+function checkHaveCompleted(day: dayType) {
+  console.log("f");
 }

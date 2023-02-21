@@ -14,6 +14,7 @@ import { Outlet } from "react-router";
 import Sign from "./pages/Sign";
 import Login from "./pages/Login";
 import Task from "./pages/Task";
+import { useAuth } from "./hooks/useAuth";
 
 const AppWrapper = styled.div`
   width: 762px;
@@ -32,17 +33,29 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Root />}>
       <Route index element={<Tassker />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/sign" element={<Sign />} />
       <Route path="/task" element={<Task />} />
+      <Route path="/sign" element={<Sign />} />
+      <Route path="/login" element={<Login />} />
     </Route>
   )
 );
 
+const publicRouter = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path="/" element={<Root />}>
+      <Route index element={<Login />} />
+      <Route path="/sign" element={<Sign />} />
+      <Route path="*" element={<Login />} />
+    </Route>
+  )
+)
+
 function App() {
+  const {isAuth} = useAuth();
+  console.log(isAuth)
   return (
     <AppWrapper>
-      <RouterProvider router={router} />
+      <RouterProvider router={isAuth ? router : publicRouter} />
     </AppWrapper>
   );
 }

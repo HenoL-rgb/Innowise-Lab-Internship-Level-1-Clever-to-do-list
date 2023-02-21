@@ -9,6 +9,60 @@ import { useCurrentDay } from "../hooks/useCurrentDay";
 import { useCurrentTask } from "../hooks/useCurrentTask";
 import { taskType, useTasks } from "../hooks/useTasks";
 import { useAppDispatch } from "../hooks/redux-hooks";
+import styled from "styled-components";
+
+const StyledBackButton = styled.button`
+    margin-top: 5px;
+    outline: 0;
+    display: block;
+    padding: 10px 12px;
+    font-size: 18px;
+    background-color: #d84400;
+    color: white;
+    border: 0;
+    border-radius: 5px;
+    width: 20%;
+`;
+
+const StyledTaskForm = styled.form`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+  width: 100%;
+  height: 100%;
+  & h3 {
+    align-self: flex-start;
+    font-weight: 400;
+  }
+  & input,
+  textarea {
+    margin-top: 5px;
+    outline: 0;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    display: block;
+    font-size: 16px;
+    padding: 10px 12px;
+  }
+
+  & textarea {
+    height: 100%;
+  }
+  
+  & input[type="submit"] {
+    width: 40%;
+    align-self: center;
+    font-size: 18px;
+    background-color: #fc6722;
+    color: white;
+    border: 0;
+    border-radius: 5px;
+  }
+  & div {
+    display: flex;
+    justify-content: space-between;
+  }
+`;
 
 export default function Task() {
   const {
@@ -30,18 +84,12 @@ export default function Task() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  // function handleInputTitle(e: HTMLInputElement): void {
-  //     if(!e.target) return;
-
-  //     setTaskTitle(e.target.value);
-  // }
-
   async function onSubmit(data: any) {
     //currDayId && taskId ->
     //currDayId !task ->
     //!currDayId !task
     if (!taskId && id !== "") {
-        updateExistedDoc(data)
+      updateExistedDoc(data);
     } else if (!taskId && !id) {
       addNewDoc(data);
     }
@@ -72,30 +120,30 @@ export default function Task() {
     });
   }
 
-  return isAuth ? (
+  return (
     <>
-      <div>
-        <button onClick={() => navigate("/")}>Back</button>
-      </div>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <h1>{taskId ? "Update" : "New"} task</h1>
+      <StyledTaskForm onSubmit={handleSubmit(onSubmit)}>
+        <h3>Title: </h3>
         <input
           {...register("title", {
             required: "Enter title!",
           })}
         />
-        <input
+
+        <h3>Description: </h3>
+        <textarea
           {...register("todo", {
             required: "Enter todo!",
           })}
         />
-        <input type="submit" value={mode} />
-      </form>
+        <div>
+          <StyledBackButton onClick={() => navigate("/")}>
+            Back
+          </StyledBackButton>
+          <input type="submit" value={mode} />
+        </div>
+      </StyledTaskForm>
     </>
-  ) : (
-    <Login />
   );
 }
-
-// export async function loader({ params }: any) {
-
-// }

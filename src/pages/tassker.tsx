@@ -13,12 +13,12 @@ import Login from "./Login";
 
 const TasskerWrapper = styled.div`
   position: relative;
-  width: 762px;
+  max-width: 762px;
   height: 100%;
   display: flex;
   flex-direction: column;
   row-gap: 10px;
-  padding: 20px;
+  padding: 0 20px;
   
 `;
 export default function Tassker() {
@@ -26,14 +26,12 @@ export default function Tassker() {
   const { isAuth, email } = useAuth();
   const days = useTasks(email);
   
-  return isAuth ? (
+  return  (
     <TasskerWrapper>
       <SignButton onClick={() => dispatch(removeUser())} />
       <DaysList days={days} />
       <Tasks days={days} />
       <AddTaskBtn />
     </TasskerWrapper>
-  ) : (
-    <Login />
   );
 }

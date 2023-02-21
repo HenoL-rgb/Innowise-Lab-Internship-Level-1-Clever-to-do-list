@@ -15,6 +15,10 @@ const TasksListWrapper = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: 20px;
+  overflow-y: scroll;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 type tasksProps = {
   days: any[];
