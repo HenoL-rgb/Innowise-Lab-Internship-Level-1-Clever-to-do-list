@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import currentDaySlice from "./slices/currentDaySlice";
+import currentTaskSlice from "./slices/currentTaskSlice";
 import tasksSlice from "./slices/tasksSlice";
 import userReducer from './slices/userSlice'
 
@@ -8,6 +9,7 @@ export const store = configureStore({
         user: userReducer,
         task: tasksSlice,
         currentDay: currentDaySlice,
+        currentTask: currentTaskSlice
     }
 })
 

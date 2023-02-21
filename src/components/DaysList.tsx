@@ -12,41 +12,62 @@ const DaysListWrapper = styled.ul`
   list-style: none;
   overflow-x: scroll;
   max-width: 762px;
-  padding-left: 20px;
-  padding-top: 10px;
+  padding: 10px 0 20px;
 `;
 
 type daysListProps = {
-  days: dayType[]
-}
+  days: dayType[];
+};
 
-export default function DaysList({days}: daysListProps) {
+export default function DaysList({ days }: daysListProps) {
   const [page, setPage] = useState(1);
   const [currDay, setCurrDay] = useState(0);
   const daysList = useDays(page);
-  const [currentMonth, setCurrentMonth] = useState('February');
+  const [currentMonth, setCurrentMonth] = useState("February");
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    setCurrentMonth(getMonth(daysList[currDay]))
-  }, [daysList, currDay])
+    setCurrentMonth(getMonth(daysList[currDay]));
+  }, [daysList, currDay]);
 
   function handleClick(id: number) {
-    const day = daysList[id];
-    console.log(day)
-    setCurrDay(id)
-    dispatch(setCurrentDay({
-      day: day.getDate(),
-      weekDay: day.getDay(),
-      month: day.getMonth(),
-      year: day.getFullYear(),
-    }))
-    
+    const dayData = daysList[id];
+    setCurrDay(id);
+    updateCurrentDay(dayData);
   }
- 
+
+  function updateCurrentDay(dayData: Date) {
+    const dayToFind = {
+      day: dayData.getDate(),
+      month: dayData.getMonth(),
+      year: dayData.getFullYear(),
+    };
+    const dayDb = days.find(
+      (t) =>
+        t.day === dayToFind.day &&
+        t.month === dayToFind.month &&
+        t.year === dayToFind.year
+    );
+
+    if (dayDb) {
+      dispatch(
+        setCurrentDay({
+          ...dayDb,
+        })
+      );
+    } else {
+      dispatch(
+        setCurrentDay({
+          ...dayToFind,
+          id: "",
+        })
+      );
+    }
+  }
+
   return (
     <div>
-      <h1 style={{textAlign: 'center'}}>{currentMonth}</h1>
+      <h1 style={{ textAlign: "center" }}>{currentMonth}</h1>
       <DaysListWrapper>
         {daysList.map((day, index) => {
           return (
@@ -68,16 +89,18 @@ export default function DaysList({days}: daysListProps) {
 }
 
 function getWeekDay(day: Date) {
-  return day.toString().split(' ')[0]
+  return day.toString().split(" ")[0];
 }
 
 function getMonth(day: Date) {
-  if(!day) return ''
-  return day.toString().split(' ')[1]
+  if (!day) return "";
+  return day.toString().split(" ")[1];
 }
 
-
 function checkIsCurrent(day: Date, currentDay: Date) {
-  return day.getDay() === currentDay.getDay() && day.getMonth() === currentDay.getMonth()
-  && day.getDate() === currentDay.getDate();
+  return (
+    day.getDay() === currentDay.getDay() &&
+    day.getMonth() === currentDay.getMonth() &&
+    day.getDate() === currentDay.getDate()
+  );
 }

@@ -9,13 +9,14 @@ export type dayType = {
   day: number;
   month: number;
   year: number;
-  tasks: taskType[],
-  //tasks: taskType[];
+  tasks: taskType[];
 };
 
 export type taskType = {
+  id: number;
   title: string;
   todo: string;
+  completed: boolean;
 };
 
 export function useTasks(email: string | null) {
@@ -26,7 +27,6 @@ export function useTasks(email: string | null) {
 
     const getTasks = async () => {
       const dbDays = await retrieveDays(email);
-      console.log(dbDays)
       setDays([...dbDays]);
     };
     getTasks();
@@ -34,7 +34,6 @@ export function useTasks(email: string | null) {
 
   return days;
 }
-
 
 async function retrieveDays(email: string) {
   const days: dayType[] = [];
@@ -55,21 +54,3 @@ async function retrieveDays(email: string) {
 
   return days;
 }
-
-// async function retrieveTasks(email: string, docId: string) {
-//   const t = query(collection(db, `${email}/${docId}/tasks`));
-//   const taskSnapshot = await getDocs(t);
-//   const tasks: taskType[] = [];
-
-//   taskSnapshot.forEach((task) => {
-//     const taskData = task.data();
-
-//     tasks.push({
-//       id: task.id,
-//       title: taskData.title,
-//       todo: taskData.todo,
-//     });
-//   });
-
-//   return tasks;
-// }

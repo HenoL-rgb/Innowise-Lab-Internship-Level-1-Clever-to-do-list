@@ -1,21 +1,35 @@
 import React from "react";
-import { useCurrentDay } from "../hooks/useCurrentDay";
+import { useCurrentTasks } from "../hooks/useCurrentTasks";
+import TaskListItem from "./TaskListItem";
+import styled from "styled-components";
 
+const StyledTasksList = styled.ul`
+  list-style: none;
+`;
+
+const TasksListWrapper = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+`;
 type tasksProps = {
-  tasks: any[];
+  days: any[];
 };
-export default function Tasks({ tasks }: tasksProps) {
-  const dayTasks = useCurrentDay(tasks);
 
-  console.log(dayTasks);
+export default function Tasks({ days }: tasksProps) {
+  const dayTasks = useCurrentTasks(days);
+
   return (
-    <div>
-      {dayTasks?.map((task, index) => (
-        <div key={index}>
-          <span>{task.title}</span>
-          <span>{task.todo}</span>
-        </div>
-      ))}
-    </div>
+    <TasksListWrapper>
+      <h1>{dayTasks.length} Tasks today</h1>
+      <StyledTasksList>
+        {dayTasks?.map((task, index) => (
+          <li key={task.id}>
+            <TaskListItem task={task}></TaskListItem>
+          </li>
+        ))}
+      </StyledTasksList>
+    </TasksListWrapper>
   );
 }

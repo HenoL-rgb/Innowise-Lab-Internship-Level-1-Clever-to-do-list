@@ -3,31 +3,31 @@ import { createSlice } from "@reduxjs/toolkit";
 type currDayTypes = {
     day: number,
     month: number,
-    weekDay: number,
     year: number,
+    id: string,
 }
 const initialState: currDayTypes = {
   day: 0,
   month: 0,
-  weekDay: 0,
   year: 0,
+  id: '',
 };
 
-const tasksSlice = createSlice({
+const taskSlice = createSlice({
   name: "currentDay",
   initialState,
   reducers: {
         setCurrentDay(state, action) {
             state.day = action.payload.day;
             state.month = action.payload.month;
-            state.weekDay = action.payload.weekDay;
             state.year = action.payload.year;
+            state.id = action.payload.id;
         }
     },
   },
 );
 
 
-export const { setCurrentDay } = tasksSlice.actions;
+export const { setCurrentDay } = taskSlice.actions;
 
-export default tasksSlice.reducer;
+export default taskSlice.reducer;

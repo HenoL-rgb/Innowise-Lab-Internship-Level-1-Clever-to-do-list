@@ -10,6 +10,7 @@ const AddButton = styled.button`
   border: 0;
   font-size: 18px;
   border-radius: 15px;
+  
 `;
 
 export default function AddTaskBtn() {

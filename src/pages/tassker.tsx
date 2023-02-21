@@ -22,26 +22,24 @@ const TasskerWrapper = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  row-gap: 20px;
-  justify-content: space-between;
+  row-gap: 10px;
   padding: 20px;
+  & button {
+    justify-self: flex-end;
+  }
 `;
 export default function Tassker() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { isAuth, email } = useAuth();
   
-  const tasks = useTasks(email)
-
-  console.log(tasks)
-
+  const days = useTasks(email)
 
   return isAuth ? (
     <TasskerWrapper>
       <SignButton onClick={() => dispatch(removeUser())} />
-      <DaysList days={tasks}/>
-      <Tasks tasks={tasks} />
+      <DaysList days={days}/>
+      <Tasks days={days} />
       <AddTaskBtn />
     </TasskerWrapper>
   ) : (
