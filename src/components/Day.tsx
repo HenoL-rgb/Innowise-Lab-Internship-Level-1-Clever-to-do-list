@@ -53,7 +53,6 @@ export default function Day({
     bgColor: isCurrent ? "black" : "white",
   };
 
-  console.log(completed, uncompleted)
   return (
     <div onClick={() => onClick(id)}>
       <DayWrapper theme={theme}>

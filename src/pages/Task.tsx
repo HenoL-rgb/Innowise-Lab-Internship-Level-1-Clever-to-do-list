@@ -5,23 +5,21 @@ import { doc, setDoc, collection, updateDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import Login from "./Login";
-import { useCurrentDay } from "../hooks/useCurrentDay";
-import { useCurrentTask } from "../hooks/useCurrentTask";
 import { taskType, useTasks } from "../hooks/useTasks";
-import { useAppDispatch } from "../hooks/redux-hooks";
+import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
 import styled from "styled-components";
 
 const StyledBackButton = styled.button`
-    margin-top: 5px;
-    outline: 0;
-    display: block;
-    padding: 10px 12px;
-    font-size: 18px;
-    background-color: #d84400;
-    color: white;
-    border: 0;
-    border-radius: 5px;
-    width: 20%;
+  margin-top: 5px;
+  outline: 0;
+  display: block;
+  padding: 10px 12px;
+  font-size: 18px;
+  background-color: #d84400;
+  color: white;
+  border: 0;
+  border-radius: 5px;
+  width: 20%;
 `;
 
 const StyledTaskForm = styled.form`
@@ -48,7 +46,7 @@ const StyledTaskForm = styled.form`
   & textarea {
     height: 100%;
   }
-  
+
   & input[type="submit"] {
     width: 40%;
     align-self: center;
@@ -73,12 +71,12 @@ export default function Task() {
   } = useForm();
 
   const { isAuth, email } = useAuth();
-  const { day, month, year, id } = useCurrentDay();
-
-  const { taskId, title, todo } = useCurrentTask();
+  const { day, month, year, id } = useAppSelector((state) => state.currentDay);
+  const {taskId, title, todo} = useAppSelector(state => state.currentTask)
 
   const mode = taskId ? "Update" : "Save";
-  const currentDay = useTasks(email).find((day) => day.id === id);
+  const days = useTasks(email, month, year);
+  const currentDay = days.find((day) => day.id === id);
   const currentDayTasks: taskType[] = currentDay ? currentDay.tasks : [];
 
   const navigate = useNavigate();
@@ -97,28 +95,6 @@ export default function Task() {
     reset();
   }
 
-  async function addNewDoc(data: any) {
-    const docData = {
-      day: day,
-      month: month,
-      year: year,
-      tasks: [{ ...data, id: 0, completed: false }],
-    };
-    const newDocRef = doc(collection(db, email));
-    await setDoc(newDocRef, docData);
-    navigate("/");
-  }
-
-  async function updateExistedDoc(data: any) {
-    const lastTask = currentDayTasks.at(-1);
-    const lastTaskId = lastTask ? lastTask.id : 0;
-    await updateDoc(doc(db, `${email}/${id}`), {
-      tasks: [
-        ...currentDayTasks,
-        { ...data, id: lastTaskId + 1, completed: false },
-      ],
-    });
-  }
 
   return (
     <>
@@ -146,4 +122,28 @@ export default function Task() {
       </StyledTaskForm>
     </>
   );
+
+  async function addNewDoc(data: any) {
+    const docData = {
+      day: day,
+      month: month,
+      year: year,
+      tasks: [{ ...data, id: 0, completed: false }],
+    };
+    const newDocRef = doc(collection(db, email));
+    await setDoc(newDocRef, docData);
+    navigate("/");
+  }
+
+  async function updateExistedDoc(data: any) {
+    const lastTask = currentDayTasks.at(-1);
+    const lastTaskId = lastTask ? lastTask.id : 0;
+    await updateDoc(doc(db, `${email}/${id}`), {
+      tasks: [
+        ...currentDayTasks,
+        { ...data, id: lastTaskId + 1, completed: false },
+      ],
+    });
+  }
 }
+

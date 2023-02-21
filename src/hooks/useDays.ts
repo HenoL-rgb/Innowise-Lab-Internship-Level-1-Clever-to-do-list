@@ -6,7 +6,7 @@ export type calendarDaysType = {
   year: number;
   id: string;
 };
-export function useDays(page: number) {
+export function useDays(currentMonth: number, currentYear: number) {
   const [daysList, setDaysList] = useState<calendarDaysType[]>([]);
 
   const currDate = new Date();
@@ -15,45 +15,32 @@ export function useDays(page: number) {
   const currYear = currDate.getFullYear();
 
   useEffect(() => {
-    function getDaysInMonth(month: number, year: number, day: number) {
-      const date = new Date(year, month, day);
+    function getDaysInMonth(month: number, year: number) {
+        const startDay = (month === currMonth && year === currYear) ? currDay : 1;
+      let date = new Date(year, month, startDay);
       const days: calendarDaysType[] = [];
-      const newDate = new Date(date);
-      days.push({
-        day: newDate.getDate(),
-        month: newDate.getMonth(),
-        year: newDate.getFullYear(),
-        id: "",
-      });
-      date.setDate(date.getDate() + 1);
-      while (date.getDate() !== day) {
-        const newDate = new Date(date);
+
+      while (date.getMonth() === month) {
         days.push({
-          day: newDate.getDate(),
-          month: newDate.getMonth(),
-          year: newDate.getFullYear(),
+          day: date.getDate(),
+          month: date.getMonth(),
+          year: date.getFullYear(),
           id: "",
         });
         date.setDate(date.getDate() + 1);
+        date = new Date(date);
       }
-      const newDateEnd = new Date(date);
 
-      days.push({
-        day: newDateEnd.getDate(),
-        month: newDateEnd.getMonth(),
-        year: newDateEnd.getFullYear(),
-        id: "",
-      });
       return days;
     }
 
-    const daysArr = getDaysInMonth(currMonth, currYear, currDay);
+    const daysArr = getDaysInMonth(currentMonth, currentYear);
     setDaysList([...daysArr]);
 
     return () => {
       setDaysList([]);
     };
-  }, [page]);
+  }, [currentMonth, currentYear]);
 
   return daysList;
 }

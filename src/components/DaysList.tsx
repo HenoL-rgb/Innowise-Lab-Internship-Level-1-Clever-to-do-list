@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { calendarDaysType, useDays } from "../hooks/useDays";
 import { setCurrentDay } from "../store/slices/currentDaySlice";
 import { useAppDispatch } from "../hooks/redux-hooks";
-import { dayType } from "../hooks/useTasks";
+import { dayType, taskType } from "../hooks/useTasks";
 
 const DaysListWrapper = styled.ul`
   display: flex;
@@ -20,15 +20,14 @@ const DaysListWrapper = styled.ul`
 
 type daysListProps = {
   days: dayType[];
+  currentMonth: number,
+  currentYear: number,
 };
 
-export default function DaysList({ days }: daysListProps) {
-  const [page, setPage] = useState(1);
+export default function DaysList({ days, currentMonth, currentYear }: daysListProps) {
   const [currDay, setCurrDay] = useState(0);
-  const daysList = useDays(page);
-  const [currentMonth, setCurrentMonth] = useState("February");
+  const daysList = useDays(currentMonth, currentYear);
   const dispatch = useAppDispatch();
-
   useEffect(() => {
     //setCurrentMonth(getMonth(daysList[currDay]));
   }, [daysList, currDay]);
@@ -64,7 +63,6 @@ export default function DaysList({ days }: daysListProps) {
 
   return (
     <div>
-      <h1 style={{ textAlign: "center" }}>{currentMonth}</h1>
       <DaysListWrapper>
         {daysList.map((date, index) => {
           let completed = false;

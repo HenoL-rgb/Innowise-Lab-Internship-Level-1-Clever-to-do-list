@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { dayType } from "../../hooks/useTasks";
 
 type tasksTypes = {
-  tasks: any[],
+  tasks: dayType[],
 };
 const initialState: tasksTypes = {
   tasks: [],
@@ -20,17 +21,20 @@ const tasksSlice = createSlice({
     },
     updateTask(state, action) {
       state.tasks = state.tasks.map((task) => {
-        if (task.id === action.payload.id) {
-          return action.payload;
+        if (task.id === action.payload.task.id) {
+          return action.payload.task;
         }
 
         return task;
       });
     },
+    clearTasks(state) {
+        state.tasks = [];
+    }
   },
 });
 
 
-export const { addTask, removeTask, updateTask } = tasksSlice.actions;
+export const { addTask, removeTask, updateTask, clearTasks } = tasksSlice.actions;
 
 export default tasksSlice.reducer;

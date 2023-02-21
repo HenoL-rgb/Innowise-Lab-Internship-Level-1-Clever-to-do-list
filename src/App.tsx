@@ -52,7 +52,6 @@ const publicRouter = createBrowserRouter(
 
 function App() {
   const {isAuth} = useAuth();
-  console.log(isAuth)
   return (
     <AppWrapper>
       <RouterProvider router={isAuth ? router : publicRouter} />

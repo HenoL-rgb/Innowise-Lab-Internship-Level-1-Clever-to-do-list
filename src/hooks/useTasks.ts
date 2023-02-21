@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "./redux-hooks";
 import { useState, useEffect } from "react";
-import { collection, doc, getDoc, getDocs, query } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
 import { db } from "../firebase";
 import { addTask } from "../store/slices/tasksSlice";
 
@@ -19,25 +19,25 @@ export type taskType = {
   completed: boolean;
 };
 
-export function useTasks(email: string | null) {
+export function useTasks(email: string, month: number, year: number) {
   const [days, setDays] = useState<dayType[]>([]);
-
   useEffect(() => {
     if (!email) return;
 
-    const getTasks = async () => {
-      const dbDays = await retrieveDays(email);
+    const getTasks = async (month: number, year: number) => {
+      const dbDays = await retrieveDays(email, month, year);
       setDays([...dbDays]);
     };
-    getTasks();
-  }, [email]);
+    getTasks(month, year);
+    
+  }, [email, month, year]);
 
   return days;
 }
 
-async function retrieveDays(email: string) {
+async function retrieveDays(email: string, month: number, year: number) {
   const days: dayType[] = [];
-  const q = query(collection(db, email));
+  const q = query(collection(db, email), where("month", "==", month), where("year", "==", year));
   const querySnapshot = await getDocs(q);
   querySnapshot.forEach(async (doc) => {
     //const tasks = await retrieveTasks(email, doc.id);

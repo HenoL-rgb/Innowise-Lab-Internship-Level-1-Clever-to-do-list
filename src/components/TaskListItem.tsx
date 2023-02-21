@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { useCurrentDay } from "../hooks/useCurrentDay";
-import { useCurrentTask } from "../hooks/useCurrentTask";
-import { taskType } from "../hooks/useTasks";
+import { taskType, useTasks } from "../hooks/useTasks";
 import Checkbox from "@mui/material/Checkbox";
+import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
+import { setCurrentDay } from "../store/slices/currentDaySlice";
+import { useAuth } from "../hooks/useAuth";
+import { updateTask } from "../store/slices/tasksSlice";
 
 type taskListItemProps = {
   task: taskType;
@@ -31,10 +33,12 @@ export default function TaskListItem({
   handleChange,
 }: taskListItemProps) {
   const [isChecked, setIsChecked] = useState(task.completed);
+  const dispatch = useAppDispatch();
 
   function handleCheck(e: React.ChangeEvent<HTMLInputElement>) {
     setIsChecked((prev) => !prev);
     handleChange({ ...task, completed: !isChecked });
+    //dispatch(updateTask({...task, completed: !isChecked}))
   }
 
   return (

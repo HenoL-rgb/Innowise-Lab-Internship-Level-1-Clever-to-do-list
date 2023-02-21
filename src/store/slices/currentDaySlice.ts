@@ -5,12 +5,16 @@ type currDayTypes = {
     month: number,
     year: number,
     id: string,
+    completed: boolean,
+    uncompleted: boolean,
 }
 const initialState: currDayTypes = {
-  day: 0,
-  month: 0,
-  year: 0,
+  day: new Date().getDay(),
+  month: new Date().getMonth(),
+  year: new Date().getFullYear(),
   id: '',
+  completed: false,
+  uncompleted: false,
 };
 
 const taskSlice = createSlice({
@@ -22,6 +26,8 @@ const taskSlice = createSlice({
             state.month = action.payload.month;
             state.year = action.payload.year;
             state.id = action.payload.id;
+            state.completed = action.payload.completed;
+            state.uncompleted = action.payload.completed;
         }
     },
   },
