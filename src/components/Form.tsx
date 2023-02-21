@@ -8,6 +8,33 @@ type formProps = {
   handleClick: (email: string, password: string) => void;
 };
 
+const StyledForm = styled.form`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 10px;
+    width: 100%;
+    & input {
+        width: 60%;
+        padding: 10px 12px;
+        outline: none;
+        border-radius: 5px;
+        border: 1px solid rgba(0,0,0,0.1);
+        font-size: 16px;
+    }
+    & input[type="submit"]{
+        margin-top: 15px;
+        background-color: #fc6722;
+        font-size: 18px;
+        width: 30%;
+        color: white;
+        border: 0;
+        &:active {
+            background-color: #ff8750;
+        }
+    }
+`
+
 export default function Form({ title, handleClick }: formProps) {
   const {
     register,
@@ -21,7 +48,7 @@ export default function Form({ title, handleClick }: formProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <StyledForm onSubmit={handleSubmit(onSubmit)}>
       <input
         {...register("email", {
           required: "Invalid email",
@@ -29,6 +56,6 @@ export default function Form({ title, handleClick }: formProps) {
       />
       <input type="password" {...register("password")} />
       <input type="submit" value="Submit" />
-    </form>
+    </StyledForm>
   );
 }

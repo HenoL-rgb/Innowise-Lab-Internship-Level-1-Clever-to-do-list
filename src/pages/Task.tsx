@@ -1,15 +1,13 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { db } from "../firebase";
-import { doc, setDoc, addDoc, collection, updateDoc } from "firebase/firestore";
+import { doc, setDoc, collection, updateDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import Login from "./Login";
 import { useCurrentDay } from "../hooks/useCurrentDay";
-import { useCurrentTasks } from "../hooks/useCurrentTasks";
 import { useCurrentTask } from "../hooks/useCurrentTask";
 import { taskType, useTasks } from "../hooks/useTasks";
-import { setCurrentDay } from "../store/slices/currentDaySlice";
 import { useAppDispatch } from "../hooks/redux-hooks";
 
 export default function Task() {
@@ -43,24 +41,35 @@ export default function Task() {
     //currDayId !task ->
     //!currDayId !task
     if (!taskId && id !== "") {
-        const lastTask = currentDayTasks.at(-1);
-        const lastTaskId = lastTask ? lastTask.id : 0
-      await updateDoc(doc(db, `${email}/${id}`), {
-        tasks: [...currentDayTasks, {...data, id: lastTaskId + 1, completed: false}],
-      });
+        updateExistedDoc(data)
     } else if (!taskId && !id) {
-      const docData = {
-        day: day,
-        month: month,
-        year: year,
-        tasks: [{...data, id: 0, completed: false}],
-      };
-      const newDocRef = doc(collection(db, email));
-      await setDoc(newDocRef, docData);
-      navigate('/')
+      addNewDoc(data);
     }
 
     reset();
+  }
+
+  async function addNewDoc(data: any) {
+    const docData = {
+      day: day,
+      month: month,
+      year: year,
+      tasks: [{ ...data, id: 0, completed: false }],
+    };
+    const newDocRef = doc(collection(db, email));
+    await setDoc(newDocRef, docData);
+    navigate("/");
+  }
+
+  async function updateExistedDoc(data: any) {
+    const lastTask = currentDayTasks.at(-1);
+    const lastTaskId = lastTask ? lastTask.id : 0;
+    await updateDoc(doc(db, `${email}/${id}`), {
+      tasks: [
+        ...currentDayTasks,
+        { ...data, id: lastTaskId + 1, completed: false },
+      ],
+    });
   }
 
   return isAuth ? (

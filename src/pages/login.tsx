@@ -11,6 +11,22 @@ import {
 } from "firebase/auth";
 import Form from "../components/Form";
 import { useAuth } from "../hooks/useAuth";
+import styled from "styled-components";
+
+const LoginWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  & div {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    row-gap: 30px;
+    align-items: center;
+  }
+`;
 
 export default function Login() {
   const dispatch = useAppDispatch();
@@ -18,7 +34,7 @@ export default function Login() {
 
   function handleLogin(email: string, password: string) {
     const auth = getAuth();
-    
+
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
@@ -38,10 +54,12 @@ export default function Login() {
   }
 
   return (
-    <>
-      <h1>Sign in</h1>
-      <Form title="sign in" handleClick={handleLogin} />
-      <Link to="/sign">Register</Link>
-    </>
+    <LoginWrapper>
+      <div>
+        <h1>Sign in</h1>
+        <Form title="sign in" handleClick={handleLogin} />
+        <Link to="/sign">Register</Link>
+      </div>
+    </LoginWrapper>
   );
 }

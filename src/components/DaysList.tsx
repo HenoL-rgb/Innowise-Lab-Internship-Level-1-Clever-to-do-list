@@ -13,6 +13,9 @@ const DaysListWrapper = styled.ul`
   overflow-x: scroll;
   max-width: 762px;
   padding: 10px 0 20px;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 type daysListProps = {
