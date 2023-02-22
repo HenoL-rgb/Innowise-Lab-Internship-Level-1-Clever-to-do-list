@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { dayType } from "../../hooks/useTasks";
+import { dayType } from "../../functions.ts/retrieveDays";
 
 type tasksTypes = {
-  tasks: dayType[],
+  tasks: dayType[];
 };
 const initialState: tasksTypes = {
   tasks: [],
@@ -13,35 +13,41 @@ const tasksSlice = createSlice({
   initialState,
   reducers: {
     addTask(state, action) {
-        console.log(action.payload)
-      state.tasks = [...state.tasks, ...action.payload];
+      state.tasks = [...action.payload];
     },
     removeTask(state, action) {
-      state.tasks = state.tasks.filter((task) => task.id !== action.payload.id);
+      state.tasks = state.tasks.map((date) => {
+        if (date.day === action.payload.day) {
+          return {
+            ...date,
+            tasks: date.tasks.filter((t) => t.id !== action.payload.id),
+          };
+        }
+        return date;
+      });
     },
     updateTask(state, action) {
-      state.tasks = state.tasks.map(date => {
-        if(date.day === action.payload.day){
+      state.tasks = state.tasks.map((date) => {
+        if (date.day === action.payload.day) {
           const newDate = date;
-          newDate.tasks = date.tasks.map(task => {
-            if(task.id === action.payload.id){
-              return {...task, completed: !task.completed}
+          newDate.tasks = date.tasks.map((task) => {
+            if (task.id === action.payload.id) {
+              return { ...task, completed: !task.completed };
             }
             return task;
-          })
+          });
           return newDate;
         }
         return date;
-      })
-
+      });
     },
     clearTasks(state) {
-        state.tasks = [];
-    }
+      state.tasks = [];
+    },
   },
 });
 
-
-export const { addTask, removeTask, updateTask, clearTasks } = tasksSlice.actions;
+export const { addTask, removeTask, updateTask, clearTasks } =
+  tasksSlice.actions;
 
 export default tasksSlice.reducer;

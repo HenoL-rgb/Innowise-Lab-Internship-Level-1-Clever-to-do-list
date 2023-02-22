@@ -1,14 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 type currDayTypes = {
-    taskId: string,
+    taskId: number,
     title: string,
     todo: string,
 }
 const initialState: currDayTypes = {
   title: '',
   todo: '',
-  taskId: '',
+  taskId: 0,
 };
 
 const daysSlice = createSlice({

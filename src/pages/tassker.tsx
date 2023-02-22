@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import AddTaskBtn from "../components/AddTaskBtn";
 import DaysList from "../components/DaysList";
 import Tasks from "../components/Tasks";
@@ -8,10 +8,8 @@ import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
 import { useAuth } from "../hooks/useAuth";
 import SignButton from "../components/SignButton";
 import { removeUser } from "../store/slices/userSlice";
-import { taskType, useTasks } from "../hooks/useTasks";
-import Login from "./Login";
-import { updateDoc, doc } from "firebase/firestore";
-import { db } from "../firebase";
+import { retrieveDays, taskType } from "../functions.ts/retrieveDays";
+
 import { addTask, clearTasks, removeTask } from "../store/slices/tasksSlice";
 import { setCurrentDay } from "../store/slices/currentDaySlice";
 import { IconButton } from "@mui/material";
@@ -41,14 +39,16 @@ export default function Tassker() {
   const currM = new Date(currentDate.year, currentDate.month, currentDate.day);
   const realDate = new Date();
   const currentDateString = currM.toString().split(" ");
-  const days = useTasks(email, currentDate.month, currentDate.year);
 
   useEffect(() => {
-    dispatch(addTask([...days]));
+     retrieveDays(email, currentDate.month, currentDate.year).then((res) =>{
+      dispatch(addTask([...res]))
+    })
+    
     return () => {
       dispatch(clearTasks());
     };
-  }, [days]);
+  }, [currentDate.month, currentDate.year, email]);
 
   function handleNext() {
     const newDate = new Date(currM.getFullYear(), currM.getMonth() + 1, 1);
@@ -71,7 +71,8 @@ export default function Tassker() {
     dispatch(
       setCurrentDay({
         ...currentDate,
-        day: newDate.getMonth() === realDate.getMonth() ? realDate.getDate() : 1,
+        day:
+          newDate.getMonth() === realDate.getMonth() ? realDate.getDate() : 1,
         month: newDate.getMonth(),
         year: newDate.getFullYear(),
       })
@@ -97,7 +98,6 @@ export default function Tassker() {
         <h1 style={{ textAlign: "center" }}>
           {`${currentDate.day} ${currentDateString[1]} ${currentDate.year}`}
         </h1>
-
         <IconButton onClick={handleNext}>
           <ArrowForwardIosIcon fontSize="large" />
         </IconButton>

@@ -2,12 +2,13 @@ import React, { Suspense, useState } from "react";
 import { useCurrentTasks } from "../hooks/useCurrentTasks";
 import TaskListItem from "./TaskListItem";
 import styled from "styled-components";
-import { taskType } from "../hooks/useTasks";
-import { doc, updateDoc } from "firebase/firestore";
+import { taskType } from "../functions.ts/retrieveDays";
+import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { useAuth } from "../hooks/useAuth";
 import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
-import { updateTask } from "../store/slices/tasksSlice";
+import { removeTask, updateTask } from "../store/slices/tasksSlice";
+import { setCurrentDay } from "../store/slices/currentDaySlice";
 
 const StyledTasksList = styled.ul`
   list-style: none;
@@ -32,12 +33,12 @@ type tasksProps = {
 export default function Tasks({ days }: tasksProps) {
   const dayTasks = useCurrentTasks(days);
   const { email } = useAuth();
-  const { day, month, year, id } = useAppSelector((state) => state.currentDay);
+  const currentDate = useAppSelector((state) => state.currentDay);
   const tasks = useAppSelector(state => state.task);
   const dispatch = useAppDispatch()
 
   async function handleChange(task: taskType) {
-    await updateDoc(doc(db, `${email}/${id}`), {
+    await updateDoc(doc(db, `${email}/${currentDate.id}`), {
       tasks: dayTasks.map((t) => {
         if (t.id === task.id) {
           return { ...t, completed: !t.completed };
@@ -45,7 +46,22 @@ export default function Tasks({ days }: tasksProps) {
         return t;
       }),
     });
-    dispatch(updateTask({...task, completed: !task.completed, day: day}))
+    dispatch(updateTask({...task, completed: !task.completed, day: currentDate.day}))
+  }
+
+  async function handleDelete(task: taskType) {
+    const newTasks = dayTasks.filter(t => t.id !== task.id)
+    if(newTasks.length === 0) {
+      await deleteDoc(doc(db, `${email}/${currentDate.id}`))
+      dispatch(setCurrentDay({...currentDate, id: ''}))
+    } else {
+      await updateDoc(doc(db, `${email}/${currentDate.id}`), {
+        tasks: newTasks
+      })
+    }
+
+    dispatch(removeTask({...task, day: currentDate.day}));
+
   }
 
   return (
@@ -57,6 +73,7 @@ export default function Tasks({ days }: tasksProps) {
               key={task.id}
               task={task}
               handleChange={handleChange}
+              handleDelete={handleDelete}
             ></TaskListItem>
         ))}
       </StyledTasksList>

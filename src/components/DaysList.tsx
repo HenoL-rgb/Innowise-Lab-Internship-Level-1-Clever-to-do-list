@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { calendarDaysType, useDays } from "../hooks/useDays";
 import { setCurrentDay } from "../store/slices/currentDaySlice";
 import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
-import { dayType, taskType } from "../hooks/useTasks";
+import { dayType, taskType } from "../functions.ts/retrieveDays";
 
 const DaysListWrapper = styled.ul`
   display: flex;
@@ -32,14 +32,13 @@ export default function DaysList({
   const daysList = useDays(currentMonth, currentYear);
   const dispatch = useAppDispatch();
   const currentDay = useAppSelector(state => state.currentDay.day);
-
   function handleClick(day: number) {
     updateCurrentDay(day);
   }
 
   function updateCurrentDay(day: number) {
     const dayDb = days.find((t) => t.day === day);
-
+    console.log(dayDb)
     if (dayDb) {
       dispatch(
         setCurrentDay({

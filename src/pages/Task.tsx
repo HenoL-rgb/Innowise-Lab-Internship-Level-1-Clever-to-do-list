@@ -5,9 +5,10 @@ import { doc, setDoc, collection, updateDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import Login from "./Login";
-import { taskType, useTasks } from "../hooks/useTasks";
+import { taskType } from "../functions.ts/retrieveDays";
 import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
 import styled from "styled-components";
+import { setCurrentTask } from "../store/slices/currentTaskSlice";
 
 const StyledBackButton = styled.button`
   margin-top: 5px;
@@ -75,7 +76,7 @@ export default function Task() {
   const {taskId, title, todo} = useAppSelector(state => state.currentTask)
 
   const mode = taskId ? "Update" : "Save";
-  const days = useTasks(email, month, year);
+  const days = useAppSelector(state => state.task.tasks);
   const currentDay = days.find((day) => day.id === id);
   const currentDayTasks: taskType[] = currentDay ? currentDay.tasks : [];
 
@@ -90,9 +91,11 @@ export default function Task() {
       updateExistedDoc(data);
     } else if (!taskId && !id) {
       addNewDoc(data);
+    } else {
+      updateExistedTask(data);
     }
-
     reset();
+    navigate("/");
   }
 
 
@@ -105,6 +108,7 @@ export default function Task() {
           {...register("title", {
             required: "Enter title!",
           })}
+          defaultValue={title}
         />
 
         <h3>Description: </h3>
@@ -112,6 +116,7 @@ export default function Task() {
           {...register("todo", {
             required: "Enter todo!",
           })}
+          defaultValue={todo}
         />
         <div>
           <StyledBackButton onClick={() => navigate("/")}>
@@ -128,11 +133,10 @@ export default function Task() {
       day: day,
       month: month,
       year: year,
-      tasks: [{ ...data, id: 0, completed: false }],
+      tasks: [{ ...data, id: 1, completed: false }],
     };
     const newDocRef = doc(collection(db, email));
     await setDoc(newDocRef, docData);
-    navigate("/");
   }
 
   async function updateExistedDoc(data: any) {
@@ -144,6 +148,24 @@ export default function Task() {
         { ...data, id: lastTaskId + 1, completed: false },
       ],
     });
+  }
+
+  async function updateExistedTask(data: any) {
+    await updateDoc(doc(db, `${email}/${id}`), {
+      tasks: currentDayTasks.map(task => {
+        if(task.id === taskId){
+          
+          return {
+            ...task,
+            title: data.title,
+            todo: data.todo,
+          };
+        }
+        return task;
+      })
+    });
+
+    dispatch(setCurrentTask({title: '', todo: '', id: 0}))
   }
 }
 
