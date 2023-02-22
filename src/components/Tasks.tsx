@@ -6,7 +6,8 @@ import { taskType } from "../hooks/useTasks";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { useAuth } from "../hooks/useAuth";
-import { useAppSelector } from "../hooks/redux-hooks";
+import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
+import { updateTask } from "../store/slices/tasksSlice";
 
 const StyledTasksList = styled.ul`
   list-style: none;
@@ -32,6 +33,8 @@ export default function Tasks({ days }: tasksProps) {
   const dayTasks = useCurrentTasks(days);
   const { email } = useAuth();
   const { day, month, year, id } = useAppSelector((state) => state.currentDay);
+  const tasks = useAppSelector(state => state.task);
+  const dispatch = useAppDispatch()
 
   async function handleChange(task: taskType) {
     await updateDoc(doc(db, `${email}/${id}`), {
@@ -42,6 +45,7 @@ export default function Tasks({ days }: tasksProps) {
         return t;
       }),
     });
+    dispatch(updateTask({...task, completed: !task.completed, day: day}))
   }
 
   return (

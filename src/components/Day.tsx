@@ -54,7 +54,7 @@ export default function Day({
   };
 
   return (
-    <div onClick={() => onClick(id)}>
+    <div onClick={() => onClick(date.day)}>
       <DayWrapper theme={theme}>
         <span>{getWeekDay(new Date(date.day, date.month, date.year))}</span>
         <span>{date.day}</span>

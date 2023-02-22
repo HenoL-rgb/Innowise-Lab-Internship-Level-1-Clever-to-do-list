@@ -9,7 +9,7 @@ type currDayTypes = {
     uncompleted: boolean,
 }
 const initialState: currDayTypes = {
-  day: new Date().getDay(),
+  day: new Date().getDate(),
   month: new Date().getMonth(),
   year: new Date().getFullYear(),
   id: '',

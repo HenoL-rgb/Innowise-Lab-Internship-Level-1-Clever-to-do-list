@@ -20,13 +20,20 @@ const tasksSlice = createSlice({
       state.tasks = state.tasks.filter((task) => task.id !== action.payload.id);
     },
     updateTask(state, action) {
-      state.tasks = state.tasks.map((task) => {
-        if (task.id === action.payload.task.id) {
-          return action.payload.task;
+      state.tasks = state.tasks.map(date => {
+        if(date.day === action.payload.day){
+          const newDate = date;
+          newDate.tasks = date.tasks.map(task => {
+            if(task.id === action.payload.id){
+              return {...task, completed: !task.completed}
+            }
+            return task;
+          })
+          return newDate;
         }
+        return date;
+      })
 
-        return task;
-      });
     },
     clearTasks(state) {
         state.tasks = [];

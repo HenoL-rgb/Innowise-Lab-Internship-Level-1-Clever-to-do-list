@@ -14,8 +14,9 @@ import { updateDoc, doc } from "firebase/firestore";
 import { db } from "../firebase";
 import { addTask, clearTasks, removeTask } from "../store/slices/tasksSlice";
 import { setCurrentDay } from "../store/slices/currentDaySlice";
-import IconButton from "@mui/material/IconButton";
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import { IconButton } from "@mui/material";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 
 const TasskerWrapper = styled.div`
   position: relative;
@@ -26,13 +27,20 @@ const TasskerWrapper = styled.div`
   row-gap: 10px;
   padding: 0 20px;
 `;
+
+const Header = styled.div`
+  display: flex;
+  column-gap: 20px;
+  justify-content: center;
+`;
 export default function Tassker() {
   const dispatch = useAppDispatch();
   const { isAuth, email } = useAuth();
   const tasks = useAppSelector((state) => state.task.tasks);
   const currentDate = useAppSelector((state) => state.currentDay);
   const currM = new Date(currentDate.year, currentDate.month, currentDate.day);
-
+  const realDate = new Date();
+  const currentDateString = currM.toString().split(" ");
   const days = useTasks(email, currentDate.month, currentDate.year);
 
   useEffect(() => {
@@ -42,22 +50,58 @@ export default function Tassker() {
     };
   }, [days]);
 
-  function handleClick() {
+  function handleNext() {
+    const newDate = new Date(currM.getFullYear(), currM.getMonth() + 1, 1);
+    dispatch(
+      setCurrentDay({
+        ...currentDate,
+        day: 1,
+        month: newDate.getMonth(),
+        year: newDate.getFullYear(),
+      })
+    );
+  }
+
+  function handlePrev() {
     const newDate = new Date(
       currentDate.year,
-      currentDate.month + 1,
+      currentDate.month - 1,
       currentDate.day
     );
-    dispatch(setCurrentDay({ ...currentDate, month: newDate.getMonth() }));
+    dispatch(
+      setCurrentDay({
+        ...currentDate,
+        day: newDate.getMonth() === realDate.getMonth() ? realDate.getDate() : 1,
+        month: newDate.getMonth(),
+        year: newDate.getFullYear(),
+      })
+    );
   }
 
   return (
     <TasskerWrapper>
       <SignButton onClick={() => dispatch(removeUser())} />
-      <IconButton onClick={handleClick}> 
-        <NavigateNextIcon />
-      </IconButton>
-      <h1 style={{ textAlign: "center" }}>{currM.toString().split(" ")[1]}</h1>
+      <Header>
+        <IconButton
+          onClick={handlePrev}
+          disabled={
+            realDate.getMonth() === currentDate.month &&
+            realDate.getFullYear() === currentDate.year
+              ? true
+              : false
+          }
+        >
+          <ArrowBackIosNewIcon fontSize="large" />
+        </IconButton>
+
+        <h1 style={{ textAlign: "center" }}>
+          {`${currentDate.day} ${currentDateString[1]} ${currentDate.year}`}
+        </h1>
+
+        <IconButton onClick={handleNext}>
+          <ArrowForwardIosIcon fontSize="large" />
+        </IconButton>
+      </Header>
       <DaysList
         days={tasks}
         currentMonth={currentDate.month}
