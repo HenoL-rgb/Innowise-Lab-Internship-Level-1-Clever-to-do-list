@@ -2,7 +2,7 @@ import React, { Suspense, useState } from "react";
 import { useCurrentTasks } from "../hooks/useCurrentTasks";
 import TaskListItem from "./TaskListItem";
 import styled from "styled-components";
-import { taskType } from "../functions.ts/retrieveDays";
+import { taskType } from "../types/types";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { useAuth } from "../hooks/useAuth";
@@ -49,7 +49,6 @@ export default function Tasks({ days }: tasksProps) {
         return t;
       }),
     });
-    console.log('change', currentDate, task, email)
   }
 
   async function handleDelete(task: taskType) {

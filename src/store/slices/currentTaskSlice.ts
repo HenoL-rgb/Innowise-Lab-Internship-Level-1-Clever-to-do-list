@@ -1,11 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { currTaskTypes } from "../../types/types";
 
-type currDayTypes = {
-    taskId: number,
-    title: string,
-    todo: string,
-}
-const initialState: currDayTypes = {
+
+const initialState: currTaskTypes = {
   title: '',
   todo: '',
   taskId: 0,

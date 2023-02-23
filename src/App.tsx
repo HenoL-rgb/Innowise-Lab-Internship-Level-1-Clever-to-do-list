@@ -15,6 +15,7 @@ import Sign from "./pages/Sign";
 import Login from "./pages/Login";
 import Task from "./pages/Task";
 import { useAuth } from "./hooks/useAuth";
+import { ToastContainer } from "react-toastify";
 
 const AppWrapper = styled.div`
   position: relative;
@@ -56,6 +57,18 @@ function App() {
   const { isAuth } = useAuth();
   return (
     <AppWrapper>
+      <ToastContainer
+        position="top-left"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <RouterProvider router={isAuth ? router : publicRouter} />
     </AppWrapper>
   );

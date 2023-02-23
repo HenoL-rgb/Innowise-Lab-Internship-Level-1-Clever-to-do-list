@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { taskType } from "../functions.ts/retrieveDays";
+import { taskType } from "../types/types";
 import Checkbox from "@mui/material/Checkbox";
 import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
 import { setCurrentDay } from "../store/slices/currentDaySlice";

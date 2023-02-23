@@ -1,50 +1,28 @@
-import React, { Suspense, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import AddTaskBtn from "../components/AddTaskBtn";
 import DaysList from "../components/DaysList";
 import Tasks from "../components/Tasks";
 import "firebase/firestore";
-import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
 import SignButton from "../components/SignButton";
 import { removeUser } from "../store/slices/userSlice";
-import { dayType, retrieveDays, taskType } from "../functions.ts/retrieveDays";
+import { currDayTypes, dayType } from "../types/types";
 import { Bars } from "react-loader-spinner";
 import { setTasks } from "../store/slices/tasksSlice";
-import {
-  useCollectionData,
-  useCollectionDataOnce,
-} from "react-firebase-hooks/firestore";
-import { currDayTypes, setCurrentDay } from "../store/slices/currentDaySlice";
+import { useCollectionData } from "react-firebase-hooks/firestore";
+import { setCurrentDay } from "../store/slices/currentDaySlice";
 import { IconButton } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import { collection, doc, query, where } from "firebase/firestore";
+import { collection, query, where } from "firebase/firestore";
 import { db } from "../firebase";
+import {
+  TasskerWrapper,
+  Header,
+  LoaderWrapper,
+  CalendarInput,
+} from "./styles/TasskerStyles";
 
-const TasskerWrapper = styled.div`
-  position: relative;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  row-gap: 10px;
-  padding: 0 20px;
-`;
-
-const LoaderWrapper = styled.div`
-  position: relative;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
-const Header = styled.div`
-  position: relative;
-  display: flex;
-  column-gap: 20px;
-  justify-content: center;
-`;
 export default function Tassker() {
   const dispatch = useAppDispatch();
   const email: string = useAppSelector((state) => state.user.email);
@@ -52,9 +30,11 @@ export default function Tassker() {
 
   const currentDate: currDayTypes = useAppSelector((state) => state.currentDay);
   const realDate = new Date();
+  const realDateString = realDate.toLocaleDateString().split(".");
 
   const currM = new Date(currentDate.year, currentDate.month, currentDate.day);
   const currentDateString = currM.toString().split(" ");
+  const currentDateLocalString = currM.toLocaleDateString().split(".");
 
   const q = query(
     collection(db, email),
@@ -67,7 +47,6 @@ export default function Tassker() {
   useEffect(() => {
     if (!snapshot) return;
     if (snapshot?.docChanges()) {
-
       const t: any[] = snapshot.docs.map((doc) => {
         return {
           ...doc.data(),
@@ -75,15 +54,14 @@ export default function Tassker() {
         };
       });
       dispatch(setTasks([...t]));
-      console.log(currentDate)
-        dispatch(
-          setCurrentDay({
-            day: currentDate.day,
-            month: currentDate.month,
-            year: currentDate.year,
-            id: t[0].id,
-          })
-        );
+      dispatch(
+        setCurrentDay({
+          day: currentDate.day,
+          month: currentDate.month,
+          year: currentDate.year,
+          id: t.find((date) => date.day === currentDate.day)?.id ?? "",
+        })
+      );
     }
   }, [currentDate.month, currentDate.year, test]);
 
@@ -92,7 +70,6 @@ export default function Tassker() {
 
     dispatch(
       setCurrentDay({
-        ...currentDate,
         day: 1,
         month: newDate.getMonth(),
         year: newDate.getFullYear(),
@@ -117,6 +94,24 @@ export default function Tassker() {
     );
   }
 
+  function handleCalendarClick() {
+    if(!calRef.current) return;
+    calRef.current?.focus();
+  }
+
+  function handleCalendarChange(e: any) {
+    const newDate = e.target.value.split("-");
+    dispatch(
+      setCurrentDay({
+        day: +newDate[2],
+        month: +newDate[1] - 1,
+        year: +newDate[0],
+        id: days.find((date) => date.day === +newDate[2])?.id ?? "",
+      })
+    );
+  }
+
+  const calRef = useRef<HTMLInputElement>(null);
   return (
     <TasskerWrapper>
       <SignButton onClick={() => dispatch(removeUser())} />
@@ -133,8 +128,16 @@ export default function Tassker() {
           <ArrowBackIosNewIcon fontSize="large" />
         </IconButton>
 
-        <h1 style={{ textAlign: "center" }}>
+        <h1 style={{ textAlign: "center" }} onClick={handleCalendarClick}>
           {`${currentDate.day} ${currentDateString[1]} ${currentDate.year}`}
+          <CalendarInput
+            ref={calRef}
+            type="date"
+            onFocus={(e) => e.target.showPicker()}
+            onChange={handleCalendarChange}
+            min={`${realDateString[2]}-${realDateString[1]}-${realDateString[0]}`}
+            value={`${currentDateLocalString[2]}-${currentDateLocalString[1]}-${currentDateLocalString[0]}`}
+          />
         </h1>
         <IconButton onClick={handleNext}>
           <ArrowForwardIosIcon fontSize="large" />

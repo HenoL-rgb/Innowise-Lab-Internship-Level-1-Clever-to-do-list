@@ -3,12 +3,12 @@ import { useForm } from "react-hook-form";
 import { db } from "../firebase";
 import { doc, setDoc, collection, updateDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
-import { taskType } from "../functions.ts/retrieveDays";
+import { taskType } from "../types/types";
 import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
 import { setCurrentTask } from "../store/slices/currentTaskSlice";
 import { setCurrentDay } from "../store/slices/currentDaySlice";
 import { Bars } from "react-loader-spinner";
-import { StyledTaskForm, StyledBackButton } from "./TaskStyles";
+import { StyledTaskForm, StyledBackButton, ErrorStyle } from "./styles/TaskStyles";
 
 
 export default function Task() {
@@ -28,7 +28,6 @@ export default function Task() {
   const days = useAppSelector((state) => state.task.tasks);
   const currentDay = days.find((day) => day.id === id);
   const currentDayTasks: taskType[] = currentDay ? currentDay.tasks : [];
-  console.log(currentDayTasks);
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -65,12 +64,10 @@ export default function Task() {
           })}
           defaultValue={title}
         />
-
+        {errors?.title && <ErrorStyle>{errors.title.message?.toString() || "Error!"}</ErrorStyle>}
         <h3>Description: </h3>
         <textarea
-          {...register("todo", {
-            required: "Enter todo!",
-          })}
+          {...register("todo")}
           defaultValue={todo}
         />
         <div>
@@ -108,25 +105,16 @@ export default function Task() {
   }
 
   async function updateExistedDoc(data: any) {
-    const lastTask = currentDayTasks.at(-1);
-    const lastTaskId = lastTask ? lastTask.id : 1;
-    const newTasks = days.map((day) => {
-      if (day === currentDay) {
-        return {
-          ...day,
-          tasks: [
-            ...day.tasks,
-            { ...data, id: lastTaskId + 1, completed: false },
-          ],
-        };
+    const maxTaskId = currentDayTasks ? currentDayTasks.reduce((maxId, item) => {
+      if(item.id > maxId){
+        return item.id;
       }
-
-      return day;
-    });
+      return maxId;
+    },1) : 1;
     await updateDoc(doc(db, `${email}/${id}`), {
       tasks: [
         ...currentDayTasks,
-        { ...data, id: lastTaskId + 1, completed: false },
+        { ...data, id: maxTaskId + 1, completed: false },
       ],
     });
 

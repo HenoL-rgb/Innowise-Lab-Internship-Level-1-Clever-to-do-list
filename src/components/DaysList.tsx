@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Day from "./Day";
 import styled from "styled-components";
 import { calendarDaysType, useDays } from "../hooks/useDays";
 import { setCurrentDay } from "../store/slices/currentDaySlice";
 import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
-import { dayType, taskType } from "../functions.ts/retrieveDays";
+import { dayType, taskType } from "../types/types";
 
 const DaysListWrapper = styled.ul`
   width: 100%;
@@ -32,7 +32,13 @@ export default function DaysList({
   const daysList = useDays(currentMonth, currentYear);
   const dispatch = useAppDispatch();
   const currentDay = useAppSelector((state) => state.currentDay.day);
-  const currentDate = useAppSelector((state) => state.currentDay);
+  const currRef = useRef<HTMLLIElement>(null);
+  useEffect(() => {
+    currRef.current?.scrollIntoView({
+      behavior: 'smooth',
+      inline: 'center'
+    });
+  }, [currentDay])
 
   function handleClick(day: number) {
     updateCurrentDay(day);
@@ -66,32 +72,34 @@ export default function DaysList({
       <DaysListWrapper>
         {daysList.map((date, index) => {
           const currentTasks = days.find((d) => d.day === date.day)?.tasks;
-          const completed = currentTasks
-            ? currentTasks.find((task) => task.completed === true)
+          let completed = false;
+          let uncompleted = false;
+          if (currentTasks) {
+            completed = currentTasks.find((task) => task.completed === true)
               ? true
-              : false
-            : false;
-            const uncompleted = currentTasks
-            ? currentTasks.find((task) => task.completed === false)
+              : false;
+
+            uncompleted = currentTasks.find((task) => task.completed === false)
               ? true
-              : false
-            : false;
+              : false;
+          }
+
+          const isCurrent = checkIsCurrent(
+            date,
+            daysList.find((date) => date.day === currentDay) ?? {
+              day: 1,
+              month: currentMonth,
+              year: currentYear,
+              id: "0",
+            }
+          );
           return (
-            <li key={index}>
+            <li key={index} ref={date.day === currentDay ? currRef : null}>
               <Day
                 completed={completed}
                 uncompleted={uncompleted}
                 date={date}
-                id={index}
-                isCurrent={checkIsCurrent(
-                  date,
-                  daysList.find((date) => date.day === currentDay) ?? {
-                    day: 1,
-                    month: currentMonth,
-                    year: currentYear,
-                    id: "0",
-                  }
-                )}
+                isCurrent={isCurrent}
                 onClick={handleClick}
               ></Day>
             </li>
@@ -102,19 +110,6 @@ export default function DaysList({
   );
 }
 
-function getWeekDay(day: Date) {
-  return day.toString().split(" ")[0];
-}
-
-function getMonth(day: Date) {
-  if (!day) return "";
-  return day.toString().split(" ")[1];
-}
-
 function checkIsCurrent(date: calendarDaysType, currentDay: calendarDaysType) {
   return date.day === currentDay.day;
-}
-
-function checkHaveCompleted(day: dayType) {
-  console.log("f");
 }

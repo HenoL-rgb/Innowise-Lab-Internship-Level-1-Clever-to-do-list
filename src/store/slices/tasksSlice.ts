@@ -1,9 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { dayType } from "../../functions.ts/retrieveDays";
+import { dayType, tasksTypes } from "../../types/types";
 
-type tasksTypes = {
-  tasks: dayType[];
-};
+
 const initialState: tasksTypes = {
   tasks: [],
 };

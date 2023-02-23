@@ -4,33 +4,9 @@ import { useAppDispatch } from "../hooks/redux-hooks";
 import { setUser } from "../store/slices/userSlice";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import Form from "../components/Form";
-import styled from "styled-components";
 import { Bars } from "react-loader-spinner";
+import { LoaderWrapper, SignWrapper } from "./styles/SignStyles";
 
-const LoaderWrapper = styled.div`
-  min-height: 600px;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
-const SignWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  min-height: 600px;
-  justify-content: center;
-  & div {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    row-gap: 30px;
-    align-items: center;
-  }
-`;
 export default function Sign() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();

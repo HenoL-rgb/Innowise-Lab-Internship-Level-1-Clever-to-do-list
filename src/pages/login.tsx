@@ -2,49 +2,28 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../hooks/redux-hooks";
 import { setUser } from "../store/slices/userSlice";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  setPersistence,
-  browserSessionPersistence,
-} from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import Form from "../components/Form";
-import { useAuth } from "../hooks/useAuth";
-import styled from "styled-components";
 import { Bars } from "react-loader-spinner";
-
-const LoaderWrapper = styled.div`
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 600px;
-`;
-
-const LoginWrapper = styled.div`
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  min-height: 600px;
-  justify-content: center;
-  & div {
-    position: relative;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    row-gap: 30px;
-    align-items: center;
-  }
-`;
+import { LoaderWrapper, LoginWrapper } from "./styles/LoginStyles";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Login() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [loader, setLoader] = useState(false);
+  const notify = () =>
+    toast.error("Incorrect data!", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
 
   function handleLoader() {
     setLoader(!loader);
@@ -67,7 +46,11 @@ export default function Login() {
           navigate("/");
         });
       })
-      .catch();
+      .catch((error) => {
+        notify();
+        setLoader(false);
+        navigate("/login");
+      });
     return;
   }
 
@@ -85,6 +68,7 @@ export default function Login() {
     </LoaderWrapper>
   ) : (
     <LoginWrapper>
+      
       <div>
         <h1>Sign in</h1>
         <Form

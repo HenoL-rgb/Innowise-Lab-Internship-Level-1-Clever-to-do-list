@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAppSelector } from './redux-hooks'
-import { dayType, taskType } from '../functions.ts/retrieveDays';
+import { dayType, taskType } from '../types/types';
 
 export function useCurrentTasks(days: dayType[]) {
     const {day, month, year} = useAppSelector(state => state.currentDay)

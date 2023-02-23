@@ -8,12 +8,16 @@ const DayWrapper = styled.div`
   row-gap: 10px;
   align-items: center;
   padding: 30px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: ${(props => props.theme.border)};
   border-radius: 15px;
   min-width: 95px;
+  font-size: 18px;
   color: ${(props) => props.theme.color};
   background: ${(props) => props.theme.bgColor};
   cursor: pointer;
+  &:hover {
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.1);
+  }
 `;
 
 const StyledCircle = styled.div`
@@ -36,8 +40,7 @@ type dayProps = {
   uncompleted: boolean;
   date: calendarDaysType;
   isCurrent: boolean;
-  id: number;
-  onClick: (id: number) => void;
+  onClick: (day: number) => void;
 };
 
 export default function Day({
@@ -45,18 +48,20 @@ export default function Day({
   uncompleted,
   date,
   isCurrent,
-  id,
   onClick,
 }: dayProps) {
+  const weekDay = new Date(date.year, date.month, date.day).getDay();
+
   const theme = {
-    color: isCurrent ? "white" : "black",
+    color: isCurrent ? "white" : (weekDay === 0) ? '#ff5608' :  "black",
     bgColor: isCurrent ? "black" : "white",
+    border: (weekDay === 0 && !isCurrent) ? '1px solid #ff5608' : '1px solid rgba(0, 0, 0, 0.1)'
   };
 
   return (
     <div onClick={() => onClick(date.day)}>
       <DayWrapper theme={theme}>
-        <span>{getWeekDay(new Date(date.day, date.month, date.year))}</span>
+        <span>{getWeekDay(new Date(date.year, date.month, date.day))}</span>
         <span>{date.day}</span>
       </DayWrapper>
       <CompletionList>

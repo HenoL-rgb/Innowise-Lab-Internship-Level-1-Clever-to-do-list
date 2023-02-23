@@ -1,13 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { currDayTypes } from "../../types/types";
 
-export type currDayTypes = {
-    day: number,
-    month: number,
-    year: number,
-    id: string,
-    completed: boolean,
-    uncompleted: boolean,
-}
 const initialState: currDayTypes = {
   day: new Date().getDate(),
   month: new Date().getMonth(),

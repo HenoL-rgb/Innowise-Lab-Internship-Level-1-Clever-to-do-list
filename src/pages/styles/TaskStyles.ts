@@ -11,6 +11,8 @@ export const StyledBackButton = styled.button`
   border: 0;
   border-radius: 5px;
   width: 20%;
+  min-width: min-content;
+  cursor: pointer;
 `;
 
 export const StyledTaskForm = styled.form`
@@ -36,6 +38,7 @@ export const StyledTaskForm = styled.form`
 
   & textarea {
     height: 100%;
+    min-height: 500px;
   }
 
   & input[type="submit"] {
@@ -46,9 +49,21 @@ export const StyledTaskForm = styled.form`
     color: white;
     border: 0;
     border-radius: 5px;
+    cursor: pointer;
   }
   & div {
     display: flex;
     justify-content: space-between;
   }
+
+  @media screen and (max-width: 720px) {
+    & textarea {
+      min-height: 400px;
+    }
+  }
 `;
+
+export const ErrorStyle = styled.span`
+  color: red;
+  padding-left: 10px;
+`

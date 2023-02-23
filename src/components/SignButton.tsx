@@ -10,6 +10,7 @@ const SignBtn = styled.button`
   color: white;
   font-size: 18px;
   align-self: flex-end;
+  cursor: pointer;
 `;
 
 type signBtnProps = {
