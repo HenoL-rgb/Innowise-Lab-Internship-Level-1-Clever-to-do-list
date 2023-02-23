@@ -3,12 +3,13 @@ import { useForm } from "react-hook-form";
 import { db } from "../firebase";
 import { doc, setDoc, collection, updateDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
-import Login from "./Login";
 import { taskType } from "../functions.ts/retrieveDays";
 import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
 import styled from "styled-components";
 import { setCurrentTask } from "../store/slices/currentTaskSlice";
+import { setCurrentDay } from "../store/slices/currentDaySlice";
+import { addTask, createTask, setTasks } from "../store/slices/tasksSlice";
+import { Bars } from "react-loader-spinner";
 
 const StyledBackButton = styled.button`
   margin-top: 5px;
@@ -16,7 +17,7 @@ const StyledBackButton = styled.button`
   display: block;
   padding: 10px 12px;
   font-size: 18px;
-  background-color: #d84400;
+  background-color: #857f7d;
   color: white;
   border: 0;
   border-radius: 5px;
@@ -71,22 +72,21 @@ export default function Task() {
     reset,
   } = useForm();
 
-  const { isAuth, email } = useAuth();
+  const email = useAppSelector((state) => state.user.email);
   const { day, month, year, id } = useAppSelector((state) => state.currentDay);
-  const {taskId, title, todo} = useAppSelector(state => state.currentTask)
+  const { taskId, title, todo } = useAppSelector((state) => state.currentTask);
+  const [loading, setLoading] = useState(false);
 
   const mode = taskId ? "Update" : "Save";
-  const days = useAppSelector(state => state.task.tasks);
+  const days = useAppSelector((state) => state.task.tasks);
   const currentDay = days.find((day) => day.id === id);
   const currentDayTasks: taskType[] = currentDay ? currentDay.tasks : [];
+  console.log(currentDayTasks);
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  async function onSubmit(data: any) {
-    //currDayId && taskId ->
-    //currDayId !task ->
-    //!currDayId !task
+  async function updateTasks(data: any) {
     if (!taskId && id !== "") {
       updateExistedDoc(data);
     } else if (!taskId && !id) {
@@ -94,10 +94,18 @@ export default function Task() {
     } else {
       updateExistedTask(data);
     }
-    reset();
-    navigate("/");
   }
-
+  function onSubmit(data: any) {
+    //currDayId && taskId ->
+    //currDayId !task ->
+    //!currDayId !task
+    setLoading(true);
+    updateTasks(data).then(() => {
+      reset();
+      navigate("/");
+      setLoading(false);
+    });
+  }
 
   return (
     <>
@@ -122,7 +130,19 @@ export default function Task() {
           <StyledBackButton onClick={() => navigate("/")}>
             Back
           </StyledBackButton>
-          <input type="submit" value={mode} />
+          {loading ? (
+            <Bars
+              height="80"
+              width="80"
+              color="#fc6722"
+              ariaLabel="bars-loading"
+              wrapperStyle={{}}
+              wrapperClass=""
+              visible={true}
+            />
+          ) : (
+            <input type="submit" value={mode} />
+          )}
         </div>
       </StyledTaskForm>
     </>
@@ -137,24 +157,38 @@ export default function Task() {
     };
     const newDocRef = doc(collection(db, email));
     await setDoc(newDocRef, docData);
+    dispatch(setCurrentDay({ ...docData, id: newDocRef.id }));
   }
 
   async function updateExistedDoc(data: any) {
     const lastTask = currentDayTasks.at(-1);
-    const lastTaskId = lastTask ? lastTask.id : 0;
+    const lastTaskId = lastTask ? lastTask.id : 1;
+    const newTasks = days.map((day) => {
+      if (day === currentDay) {
+        return {
+          ...day,
+          tasks: [
+            ...day.tasks,
+            { ...data, id: lastTaskId + 1, completed: false },
+          ],
+        };
+      }
+
+      return day;
+    });
     await updateDoc(doc(db, `${email}/${id}`), {
       tasks: [
         ...currentDayTasks,
         { ...data, id: lastTaskId + 1, completed: false },
       ],
     });
+
   }
 
   async function updateExistedTask(data: any) {
     await updateDoc(doc(db, `${email}/${id}`), {
-      tasks: currentDayTasks.map(task => {
-        if(task.id === taskId){
-          
+      tasks: currentDayTasks.map((task) => {
+        if (task.id === taskId) {
           return {
             ...task,
             title: data.title,
@@ -162,10 +196,9 @@ export default function Task() {
           };
         }
         return task;
-      })
+      }),
     });
 
-    dispatch(setCurrentTask({title: '', todo: '', id: 0}))
+    dispatch(setCurrentTask({ title: "", todo: "", id: 0 }));
   }
 }
-

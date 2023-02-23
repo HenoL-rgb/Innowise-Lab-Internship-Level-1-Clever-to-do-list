@@ -10,7 +10,7 @@ const DayWrapper = styled.div`
   padding: 30px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 15px;
-  min-width: 90px;
+  min-width: 95px;
   color: ${(props) => props.theme.color};
   background: ${(props) => props.theme.bgColor};
   cursor: pointer;

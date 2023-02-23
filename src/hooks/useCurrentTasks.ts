@@ -4,7 +4,7 @@ import { dayType, taskType } from '../functions.ts/retrieveDays';
 
 export function useCurrentTasks(days: dayType[]) {
     const {day, month, year} = useAppSelector(state => state.currentDay)
-    const tasks = useAppSelector(state => state.task)
+    const tasks = useAppSelector(state => state.task.tasks)
     const [currentTasks, setCurrentTasks] = useState<taskType[]>([]);
 
     useEffect(() => {

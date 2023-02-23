@@ -15,6 +15,7 @@ import { setCurrentTask } from "../store/slices/currentTaskSlice";
 
 type taskListItemProps = {
   task: taskType;
+  completed: boolean;
   handleChange: (task: taskType) => void;
   handleDelete: (task: taskType) => void;
 };
@@ -44,17 +45,14 @@ const StyledTasksListItem = styled.li`
 `;
 export default function TaskListItem({
   task,
+  completed,
   handleChange,
   handleDelete,
 }: taskListItemProps) {
-  const [isChecked, setIsChecked] = useState(task.completed);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
   function handleCheck(e: React.ChangeEvent<HTMLInputElement>) {
-    setIsChecked((prev) => !prev);
-    handleChange({ ...task, completed: !isChecked });
-    //dispatch(updateTask({...task, completed: !isChecked}))
+    handleChange({ ...task, completed: !completed });
   }
 
   function handleDeleteTask() {
@@ -81,8 +79,8 @@ export default function TaskListItem({
             },
             "& .MuiSvgIcon-root": { fontSize: 26 },
           }}
-          checked={isChecked}
           onChange={handleCheck}
+          checked={completed}
         />
         <span>{task.title}</span>
       </label>

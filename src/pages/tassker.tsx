@@ -5,25 +5,35 @@ import Tasks from "../components/Tasks";
 import "firebase/firestore";
 import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
-import { useAuth } from "../hooks/useAuth";
 import SignButton from "../components/SignButton";
 import { removeUser } from "../store/slices/userSlice";
-import { retrieveDays, taskType } from "../functions.ts/retrieveDays";
-
-import { addTask, clearTasks, removeTask } from "../store/slices/tasksSlice";
+import { dayType, retrieveDays, taskType } from "../functions.ts/retrieveDays";
+import { Bars } from "react-loader-spinner";
+import { setTasks } from "../store/slices/tasksSlice";
+import { useCollectionData, useCollectionDataOnce } from "react-firebase-hooks/firestore";
 import { setCurrentDay } from "../store/slices/currentDaySlice";
 import { IconButton } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import { collection, doc, query, where } from "firebase/firestore";
+import { db } from "../firebase";
 
 const TasskerWrapper = styled.div`
   position: relative;
-  max-width: 762px;
+  width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   row-gap: 10px;
   padding: 0 20px;
+`;
+
+const LoaderWrapper = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 const Header = styled.div`
@@ -33,23 +43,43 @@ const Header = styled.div`
 `;
 export default function Tassker() {
   const dispatch = useAppDispatch();
-  const { isAuth, email } = useAuth();
+  const email = useAppSelector((state) => state.user.email);
   const tasks = useAppSelector((state) => state.task.tasks);
+
   const currentDate = useAppSelector((state) => state.currentDay);
-  const currM = new Date(currentDate.year, currentDate.month, currentDate.day);
   const realDate = new Date();
+
+  const currM = new Date(currentDate.year, currentDate.month, currentDate.day);
   const currentDateString = currM.toString().split(" ");
 
-  useEffect(() => {
-     retrieveDays(email, currentDate.month, currentDate.year).then((res) =>{
-      dispatch(addTask([...res]))
-    })
-    
-    return () => {
-      dispatch(clearTasks());
-    };
-  }, [currentDate.month, currentDate.year, email]);
+  const q = query(
+    collection(db, email),
+    where("month", "==", currentDate.month),
+    where("year", "==", currentDate.year)
+  );
+  const [test, loading, error, snapshot] = useCollectionData(q);
 
+  useEffect(() => {
+    if (!snapshot) return;
+    if(snapshot?.docChanges()){
+      console.log(test);
+      const t: any[] = snapshot.docs.map((doc) => {
+        return {
+          ...doc.data(),
+          id: doc.id,
+        };
+      });
+      dispatch(setTasks([...t]));
+    }
+    
+  }, [currentDate.month, currentDate.year, test]);
+
+  // useEffect(() => {
+  //   console.log('de')
+  //   retrieveDays(email, currentDate.month, currentDate.year).then(
+  //     res => dispatch(setTasks([...res]))
+  //   )
+  // }, [email, currentDate.month, currentDate.year])
   function handleNext() {
     const newDate = new Date(currM.getFullYear(), currM.getMonth() + 1, 1);
     dispatch(
@@ -107,8 +137,24 @@ export default function Tassker() {
         currentMonth={currentDate.month}
         currentYear={currentDate.year}
       />
-      <Tasks days={tasks} />
-      <AddTaskBtn />
+      {loading ? (
+        <LoaderWrapper>
+          <Bars
+            height="80"
+            width="80"
+            color="#fc6722"
+            ariaLabel="bars-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={true}
+          />
+        </LoaderWrapper>
+      ) : (
+        <>
+          <Tasks days={tasks} />
+          <AddTaskBtn />
+        </>
+      )}
     </TasskerWrapper>
   );
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../hooks/redux-hooks";
 import { setUser } from "../store/slices/userSlice";
@@ -12,6 +12,15 @@ import {
 import Form from "../components/Form";
 import { useAuth } from "../hooks/useAuth";
 import styled from "styled-components";
+import { Bars } from "react-loader-spinner";
+
+const LoaderWrapper = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
 
 const LoginWrapper = styled.div`
   display: flex;
@@ -31,6 +40,11 @@ const LoginWrapper = styled.div`
 export default function Login() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [loader, setLoader] = useState(false);
+
+  function handleLoader() {
+    setLoader(!loader);
+  }
 
   function handleLogin(email: string, password: string) {
     const auth = getAuth();
@@ -53,11 +67,27 @@ export default function Login() {
     return;
   }
 
-  return (
+  return loader ? (
+    <LoaderWrapper>
+      <Bars
+        height="80"
+        width="80"
+        color="#fc6722"
+        ariaLabel="bars-loading"
+        wrapperStyle={{}}
+        wrapperClass=""
+        visible={true}
+      />
+    </LoaderWrapper>
+  ) : (
     <LoginWrapper>
       <div>
         <h1>Sign in</h1>
-        <Form title="sign in" handleClick={handleLogin} />
+        <Form
+          title="sign in"
+          handleClick={handleLogin}
+          setLoader={handleLoader}
+        />
         <Link to="/sign">Register</Link>
       </div>
     </LoginWrapper>

@@ -6,6 +6,7 @@ import styled from "styled-components";
 type formProps = {
   title: string;
   handleClick: (email: string, password: string) => void;
+  setLoader: () => void;
 };
 
 const StyledForm = styled.form`
@@ -35,7 +36,7 @@ const StyledForm = styled.form`
     }
 `
 
-export default function Form({ title, handleClick }: formProps) {
+export default function Form({ title, handleClick, setLoader }: formProps) {
   const {
     register,
     formState: { errors },
@@ -45,6 +46,7 @@ export default function Form({ title, handleClick }: formProps) {
 
   function onSubmit(data: any) {
     handleClick(data.email, data.password);
+    setLoader();
   }
 
   return (

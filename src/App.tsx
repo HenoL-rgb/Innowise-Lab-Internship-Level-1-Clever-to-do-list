@@ -48,10 +48,10 @@ const publicRouter = createBrowserRouter(
       <Route path="*" element={<Login />} />
     </Route>
   )
-)
+);
 
 function App() {
-  const {isAuth} = useAuth();
+  const { isAuth } = useAuth();
   return (
     <AppWrapper>
       <RouterProvider router={isAuth ? router : publicRouter} />

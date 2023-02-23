@@ -11,6 +11,13 @@ const AddButton = styled.button`
   border: 0;
   border-radius: 5px;
   padding: 10px 12px;
+  cursor: pointer;
+  &:hover {
+    background-color: #ff5608;
+  }
+  &:active {
+    background-color: #ff7b3e;
+  }
 `;
 
 export default function AddTaskBtn() {

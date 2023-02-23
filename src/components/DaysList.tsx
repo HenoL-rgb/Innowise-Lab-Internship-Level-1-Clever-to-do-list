@@ -11,7 +11,6 @@ const DaysListWrapper = styled.ul`
   column-gap: 15px;
   list-style: none;
   overflow-x: scroll;
-  max-width: 762px;
   padding: 10px 0 20px;
   ::-webkit-scrollbar {
     display: none;
@@ -31,19 +30,23 @@ export default function DaysList({
 }: daysListProps) {
   const daysList = useDays(currentMonth, currentYear);
   const dispatch = useAppDispatch();
-  const currentDay = useAppSelector(state => state.currentDay.day);
+  const currentDay = useAppSelector((state) => state.currentDay.day);
+  useEffect(() => {
+    updateCurrentDay(currentDay);
+  }, [days]);
+
   function handleClick(day: number) {
     updateCurrentDay(day);
   }
 
   function updateCurrentDay(day: number) {
     const dayDb = days.find((t) => t.day === day);
-    console.log(dayDb)
+
     if (dayDb) {
       dispatch(
         setCurrentDay({
           ...dayDb,
-          day: day
+          day: day,
         })
       );
       return;
@@ -54,7 +57,7 @@ export default function DaysList({
         day: day,
         month: currentMonth,
         year: currentYear,
-        id: ''
+        id: "",
       })
     );
   }
@@ -63,18 +66,17 @@ export default function DaysList({
     <div>
       <DaysListWrapper>
         {daysList.map((date, index) => {
-          let completed = false;
-          let uncompleted = false;
-          const dayDb = days.find((t) => t.day === date.day);
-          if (dayDb) {
-            completed = dayDb.tasks.find((task) => task.completed === true)
+          const currentTasks = days.find((d) => d.day === date.day)?.tasks;
+          const completed = currentTasks
+            ? currentTasks.find((task) => task.completed === true)
               ? true
-              : false;
-            uncompleted = dayDb.tasks.find((task) => task.completed === false)
+              : false
+            : false;
+            const uncompleted = currentTasks
+            ? currentTasks.find((task) => task.completed === false)
               ? true
-              : false;
-          }
-
+              : false
+            : false;
           return (
             <li key={index}>
               <Day
@@ -111,9 +113,7 @@ function getMonth(day: Date) {
 }
 
 function checkIsCurrent(date: calendarDaysType, currentDay: calendarDaysType) {
-  return (
-    date.day === currentDay.day
-  );
+  return date.day === currentDay.day;
 }
 
 function checkHaveCompleted(day: dayType) {
