@@ -9,6 +9,7 @@ const AddButton = styled.button`
   background-color: #fc6722;
   color: white;
   border: 0;
+  justify-self: flex-end;
   border-radius: 5px;
   padding: 10px 12px;
   cursor: pointer;

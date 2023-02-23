@@ -5,64 +5,11 @@ import { doc, setDoc, collection, updateDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { taskType } from "../functions.ts/retrieveDays";
 import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
-import styled from "styled-components";
 import { setCurrentTask } from "../store/slices/currentTaskSlice";
 import { setCurrentDay } from "../store/slices/currentDaySlice";
-import { addTask, createTask, setTasks } from "../store/slices/tasksSlice";
 import { Bars } from "react-loader-spinner";
+import { StyledTaskForm, StyledBackButton } from "./TaskStyles";
 
-const StyledBackButton = styled.button`
-  margin-top: 5px;
-  outline: 0;
-  display: block;
-  padding: 10px 12px;
-  font-size: 18px;
-  background-color: #857f7d;
-  color: white;
-  border: 0;
-  border-radius: 5px;
-  width: 20%;
-`;
-
-const StyledTaskForm = styled.form`
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  row-gap: 10px;
-  width: 100%;
-  height: 100%;
-  & h3 {
-    align-self: flex-start;
-    font-weight: 400;
-  }
-  & input,
-  textarea {
-    margin-top: 5px;
-    outline: 0;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    display: block;
-    font-size: 16px;
-    padding: 10px 12px;
-  }
-
-  & textarea {
-    height: 100%;
-  }
-
-  & input[type="submit"] {
-    width: 40%;
-    align-self: center;
-    font-size: 18px;
-    background-color: #fc6722;
-    color: white;
-    border: 0;
-    border-radius: 5px;
-  }
-  & div {
-    display: flex;
-    justify-content: space-between;
-  }
-`;
 
 export default function Task() {
   const {

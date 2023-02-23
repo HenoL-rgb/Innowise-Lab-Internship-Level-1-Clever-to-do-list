@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-type currDayTypes = {
+export type currDayTypes = {
     day: number,
     month: number,
     year: number,

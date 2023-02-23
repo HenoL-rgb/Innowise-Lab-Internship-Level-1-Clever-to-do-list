@@ -5,7 +5,6 @@ import Checkbox from "@mui/material/Checkbox";
 import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
 import { setCurrentDay } from "../store/slices/currentDaySlice";
 import { useAuth } from "../hooks/useAuth";
-import { updateTask } from "../store/slices/tasksSlice";
 import { IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -28,6 +27,10 @@ const StyledTasksListItem = styled.li`
   position: relative;
   justify-content: space-between;
   align-items: center;
+  text-decoration: ${(props) => props.theme.textDecoration};
+  background-color: ${(props) => props.theme.bgColor};
+  color: ${(props) => props.theme.color};
+
   & label {
     display: flex;
     column-gap: 5px;
@@ -43,6 +46,20 @@ const StyledTasksListItem = styled.li`
 
   }
 `;
+
+const theme = {
+  completed: {
+    textDecoration: 'line-through',
+    bgColor: 'rgba(172, 172, 172, 0.1)',
+    color: 'rgb(94, 94, 94)'
+  },
+  uncompleted: {
+    textDecoration: 'none',
+    bgColor: 'none',
+    color: 'rgb(0,0,0)'
+  }
+}
+
 export default function TaskListItem({
   task,
   completed,
@@ -51,6 +68,9 @@ export default function TaskListItem({
 }: taskListItemProps) {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  
+
   function handleCheck(e: React.ChangeEvent<HTMLInputElement>) {
     handleChange({ ...task, completed: !completed });
   }
@@ -69,7 +89,7 @@ export default function TaskListItem({
   }
 
   return (
-    <StyledTasksListItem>
+    <StyledTasksListItem theme={completed ? theme.completed : theme.uncompleted}>
       <label>
         <Checkbox
           sx={{
@@ -85,10 +105,10 @@ export default function TaskListItem({
         <span>{task.title}</span>
       </label>
       <div>
-        <IconButton onClick={handleClick}>
+        <IconButton onClick={handleClick} disabled={completed}>
           <EditIcon />
         </IconButton>
-        <IconButton onClick={handleDeleteTask}>
+        <IconButton onClick={handleDeleteTask} >
           <DeleteIcon />
         </IconButton>
       </div>

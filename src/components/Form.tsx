@@ -16,7 +16,8 @@ const StyledForm = styled.form`
     row-gap: 10px;
     width: 100%;
     & input {
-        width: 60%;
+        width: 100%;
+        max-width: 420px;
         padding: 10px 12px;
         outline: none;
         border-radius: 5px;
@@ -28,8 +29,10 @@ const StyledForm = styled.form`
         background-color: #fc6722;
         font-size: 18px;
         width: 30%;
+        min-width: min-content;
         color: white;
         border: 0;
+        cursor: pointer;
         &:active {
             background-color: #ff8750;
         }

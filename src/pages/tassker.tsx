@@ -10,8 +10,11 @@ import { removeUser } from "../store/slices/userSlice";
 import { dayType, retrieveDays, taskType } from "../functions.ts/retrieveDays";
 import { Bars } from "react-loader-spinner";
 import { setTasks } from "../store/slices/tasksSlice";
-import { useCollectionData, useCollectionDataOnce } from "react-firebase-hooks/firestore";
-import { setCurrentDay } from "../store/slices/currentDaySlice";
+import {
+  useCollectionData,
+  useCollectionDataOnce,
+} from "react-firebase-hooks/firestore";
+import { currDayTypes, setCurrentDay } from "../store/slices/currentDaySlice";
 import { IconButton } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
@@ -21,7 +24,6 @@ import { db } from "../firebase";
 const TasskerWrapper = styled.div`
   position: relative;
   width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
   row-gap: 10px;
@@ -29,6 +31,7 @@ const TasskerWrapper = styled.div`
 `;
 
 const LoaderWrapper = styled.div`
+  position: relative;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -37,16 +40,17 @@ const LoaderWrapper = styled.div`
 `;
 
 const Header = styled.div`
+  position: relative;
   display: flex;
   column-gap: 20px;
   justify-content: center;
 `;
 export default function Tassker() {
   const dispatch = useAppDispatch();
-  const email = useAppSelector((state) => state.user.email);
-  const tasks = useAppSelector((state) => state.task.tasks);
+  const email: string = useAppSelector((state) => state.user.email);
+  const days: dayType[] = useAppSelector((state) => state.task.tasks);
 
-  const currentDate = useAppSelector((state) => state.currentDay);
+  const currentDate: currDayTypes = useAppSelector((state) => state.currentDay);
   const realDate = new Date();
 
   const currM = new Date(currentDate.year, currentDate.month, currentDate.day);
@@ -57,12 +61,13 @@ export default function Tassker() {
     where("month", "==", currentDate.month),
     where("year", "==", currentDate.year)
   );
+
   const [test, loading, error, snapshot] = useCollectionData(q);
 
   useEffect(() => {
     if (!snapshot) return;
-    if(snapshot?.docChanges()){
-      console.log(test);
+    if (snapshot?.docChanges()) {
+
       const t: any[] = snapshot.docs.map((doc) => {
         return {
           ...doc.data(),
@@ -70,18 +75,21 @@ export default function Tassker() {
         };
       });
       dispatch(setTasks([...t]));
+      console.log(currentDate)
+        dispatch(
+          setCurrentDay({
+            day: currentDate.day,
+            month: currentDate.month,
+            year: currentDate.year,
+            id: t[0].id,
+          })
+        );
     }
-    
   }, [currentDate.month, currentDate.year, test]);
 
-  // useEffect(() => {
-  //   console.log('de')
-  //   retrieveDays(email, currentDate.month, currentDate.year).then(
-  //     res => dispatch(setTasks([...res]))
-  //   )
-  // }, [email, currentDate.month, currentDate.year])
   function handleNext() {
     const newDate = new Date(currM.getFullYear(), currM.getMonth() + 1, 1);
+
     dispatch(
       setCurrentDay({
         ...currentDate,
@@ -133,7 +141,7 @@ export default function Tassker() {
         </IconButton>
       </Header>
       <DaysList
-        days={tasks}
+        days={days}
         currentMonth={currentDate.month}
         currentYear={currentDate.year}
       />
@@ -151,7 +159,7 @@ export default function Tassker() {
         </LoaderWrapper>
       ) : (
         <>
-          <Tasks days={tasks} />
+          <Tasks days={days} />
           <AddTaskBtn />
         </>
       )}

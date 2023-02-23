@@ -17,8 +17,10 @@ import Task from "./pages/Task";
 import { useAuth } from "./hooks/useAuth";
 
 const AppWrapper = styled.div`
-  width: 762px;
-  height: 90vh;
+  position: relative;
+  width: 80%;
+  max-width: 762px;
+  height: min-content;
   display: flex;
   flex-direction: column;
   align-items: center;

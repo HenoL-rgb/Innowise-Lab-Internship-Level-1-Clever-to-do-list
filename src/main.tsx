@@ -18,6 +18,7 @@ const Global = createGlobalStyle`
   body {
     display: flex;
     justify-content: center;
+    
   }
 `;
 

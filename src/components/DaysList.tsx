@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
 import { dayType, taskType } from "../functions.ts/retrieveDays";
 
 const DaysListWrapper = styled.ul`
+  width: 100%;
   display: flex;
   column-gap: 15px;
   list-style: none;
@@ -31,9 +32,7 @@ export default function DaysList({
   const daysList = useDays(currentMonth, currentYear);
   const dispatch = useAppDispatch();
   const currentDay = useAppSelector((state) => state.currentDay.day);
-  useEffect(() => {
-    updateCurrentDay(currentDay);
-  }, [days]);
+  const currentDate = useAppSelector((state) => state.currentDay);
 
   function handleClick(day: number) {
     updateCurrentDay(day);

@@ -8,6 +8,7 @@ import styled from "styled-components";
 import { Bars } from "react-loader-spinner";
 
 const LoaderWrapper = styled.div`
+  min-height: 600px;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -20,6 +21,7 @@ const SignWrapper = styled.div`
   flex-direction: column;
   width: 100%;
   height: 100%;
+  min-height: 600px;
   justify-content: center;
   & div {
     width: 100%;
