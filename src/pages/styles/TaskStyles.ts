@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { themeSettings } from "../../themeSetting";
 
 export const StyledBackButton = styled.button`
   margin-top: 5px;
@@ -6,13 +7,19 @@ export const StyledBackButton = styled.button`
   display: block;
   padding: 10px 12px;
   font-size: 18px;
-  background-color: #857f7d;
-  color: white;
+  background-color: ${themeSettings.backBtn.default};
+  color: ${themeSettings.backBtn.color};
   border: 0;
   border-radius: 5px;
   width: 20%;
   min-width: min-content;
   cursor: pointer;
+  &:hover {
+    background-color: ${themeSettings.backBtn.hover};
+  }
+  &:active {
+    background-color: ${themeSettings.backBtn.active};
+  }
 `;
 
 export const StyledTaskForm = styled.form`
@@ -45,11 +52,17 @@ export const StyledTaskForm = styled.form`
     width: 40%;
     align-self: center;
     font-size: 18px;
-    background-color: #fc6722;
-    color: white;
+    background-color: ${themeSettings.buttons.default};
+    color: ${themeSettings.buttons.color};
     border: 0;
     border-radius: 5px;
     cursor: pointer;
+    &:hover {
+      background-color: ${themeSettings.buttons.hover};
+    }
+    &:active {
+      background-color: ${themeSettings.buttons.active};
+    }
   }
   & div {
     display: flex;
@@ -66,4 +79,4 @@ export const StyledTaskForm = styled.form`
 export const ErrorStyle = styled.span`
   color: red;
   padding-left: 10px;
-`
+`;

@@ -5,8 +5,7 @@ import { StyledHeader } from "./styles/HeaderStyles";
 export default function Header() {
   return (
     <StyledHeader>
-      <Link to='/sign'>
-      </Link>
+      <Link to="/sign"></Link>
     </StyledHeader>
   );
 }

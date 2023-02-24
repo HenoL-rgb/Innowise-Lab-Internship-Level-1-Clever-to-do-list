@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { themeSettings } from "../../themeSetting";
 
 export const TasskerWrapper = styled.div`
   position: relative;
@@ -7,7 +8,8 @@ export const TasskerWrapper = styled.div`
   flex-direction: column;
   row-gap: 10px;
   padding: 0 20px;
-
+  color: ${themeSettings.app.color};
+  background-color: ${themeSettings.app.bg};
   @media screen and (max-width: 720px) {
     padding: 0;
   }
@@ -15,7 +17,7 @@ export const TasskerWrapper = styled.div`
 
 export const LoaderWrapper = styled.div`
   position: relative;
-  height: 100%;
+  height: 450px;
   display: flex;
   flex-direction: column;
   justify-content: center;

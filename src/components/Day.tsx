@@ -1,4 +1,5 @@
 import React from "react";
+import { themeSettings } from "../themeSetting";
 import { dayProps } from "../types/types";
 import { DayWrapper, CompletionList, StyledCircle } from "./styles/DayStyles";
 
@@ -12,9 +13,20 @@ export default function Day({
   const weekDay: number = new Date(date.year, date.month, date.day).getDay();
 
   const theme = {
-    color: isCurrent ? "white" : (weekDay === 0) ? '#ff5608' :  "black",
-    bgColor: isCurrent ? "black" : "white",
-    border: (weekDay === 0 && !isCurrent) ? '1px solid #ff5608' : '1px solid rgba(0, 0, 0, 0.1)'
+    color: isCurrent
+      ? themeSettings.day.current.color
+      : weekDay === 0
+      ? themeSettings.day.weekDay.color
+      : themeSettings.day.default.color,
+
+    bgColor: isCurrent
+      ? themeSettings.day.current.bg
+      : themeSettings.day.default.bg,
+
+    border:
+      weekDay === 0 && !isCurrent
+        ? themeSettings.day.weekDay.border
+        : themeSettings.day.default.border,
   };
 
   return (
@@ -24,8 +36,8 @@ export default function Day({
         <span>{date.day}</span>
       </DayWrapper>
       <CompletionList>
-        {completed ? <StyledCircle color="#fc6722"/> : ''}
-        {uncompleted ? <StyledCircle color="#fdc448" /> : ''}
+        {completed ? <StyledCircle color="#fc6722" /> : ""}
+        {uncompleted ? <StyledCircle color="#fdc448" /> : ""}
       </CompletionList>
     </div>
   );

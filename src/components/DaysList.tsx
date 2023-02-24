@@ -3,7 +3,10 @@ import Day from "./Day";
 import { useDays } from "../hooks/useDays";
 import { setCurrentDay } from "../store/slices/currentDaySlice";
 import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
-import { calendarDaysType, daysListProps, dayType, taskType } from "../types/types";
+import {
+  calendarDaysType,
+  daysListProps,
+} from "../types/types";
 import { DaysListWrapper } from "./styles/DaysListStyles";
 
 export default function DaysList({
@@ -17,10 +20,10 @@ export default function DaysList({
   const currRef = useRef<HTMLLIElement>(null);
   useEffect(() => {
     currRef.current?.scrollIntoView({
-      behavior: 'smooth',
-      inline: 'center'
+      behavior: "smooth",
+      inline: "center",
     });
-  }, [currentDay])
+  }, [currentDay]);
 
   function handleClick(day: number) {
     updateCurrentDay(day);

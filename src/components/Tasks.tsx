@@ -1,4 +1,4 @@
-import React, { Suspense, useState } from "react";
+import React from "react";
 import { useCurrentTasks } from "../hooks/useCurrentTasks";
 import TaskListItem from "./TaskListItem";
 import { tasksProps, taskType } from "../types/types";
@@ -41,17 +41,17 @@ export default function Tasks({ days }: tasksProps) {
   return (
     <TasksListWrapper>
       <h1>{dayTasks.length} Tasks today</h1>
-        <StyledTasksList>
-          {dayTasks?.sort(compare).map((task, index) => (
-            <TaskListItem
-              completed={task.completed}
-              key={task.id}
-              task={task}
-              handleChange={handleChange}
-              handleDelete={handleDelete}
-            ></TaskListItem>
-          ))}
-        </StyledTasksList>
+      <StyledTasksList>
+        {dayTasks?.sort(compare).map((task, index) => (
+          <TaskListItem
+            completed={task.completed}
+            key={task.id}
+            task={task}
+            handleChange={handleChange}
+            handleDelete={handleDelete}
+          ></TaskListItem>
+        ))}
+      </StyledTasksList>
     </TasksListWrapper>
   );
 

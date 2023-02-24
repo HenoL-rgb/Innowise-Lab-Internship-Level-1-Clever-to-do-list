@@ -16,6 +16,7 @@ import Login from "./pages/Login";
 import Task from "./pages/Task";
 import { useAuth } from "./hooks/useAuth";
 import { ToastContainer } from "react-toastify";
+import { themeSettings } from "./themeSetting";
 
 const AppWrapper = styled.div`
   position: relative;
@@ -26,10 +27,12 @@ const AppWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-  padding: 30px 30px;
+  padding: 0 30px 30px;
   border-radius: 15px;
   row-gap: 30px;
   margin-top: 30px;
+  background-color: ${themeSettings.app.bg};
+  color: ${themeSettings.app.color};
 `;
 
 const router = createBrowserRouter(

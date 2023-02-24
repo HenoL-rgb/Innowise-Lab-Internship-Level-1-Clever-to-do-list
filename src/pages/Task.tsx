@@ -9,6 +9,7 @@ import { setCurrentTask } from "../store/slices/currentTaskSlice";
 import { setCurrentDay } from "../store/slices/currentDaySlice";
 import { Bars } from "react-loader-spinner";
 import { StyledTaskForm, StyledBackButton, ErrorStyle } from "./styles/TaskStyles";
+import { themeSettings } from "../themeSetting";
 
 
 export default function Task() {
@@ -41,7 +42,7 @@ export default function Task() {
       updateExistedTask(data);
     }
   }
-  
+
   function onSubmit(data: any) {
     //currDayId && taskId ->
     //currDayId !task ->
@@ -52,6 +53,12 @@ export default function Task() {
       navigate("/");
       setLoading(false);
     });
+  }
+
+  function handleBack() {
+    reset();
+    dispatch(setCurrentTask({title: '', todo: '', id: 0}));
+    navigate('/')
   }
 
   return (
@@ -72,14 +79,14 @@ export default function Task() {
           defaultValue={todo}
         />
         <div>
-          <StyledBackButton onClick={() => navigate("/")}>
+          <StyledBackButton onClick={handleBack}>
             Back
           </StyledBackButton>
           {loading ? (
             <Bars
               height="80"
               width="80"
-              color="#fc6722"
+              color={themeSettings.buttons.default}
               ariaLabel="bars-loading"
               wrapperStyle={{}}
               wrapperClass=""

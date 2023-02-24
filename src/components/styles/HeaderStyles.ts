@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { themeSettings } from "../../themeSetting";
 
 export const StyledHeader = styled.div`
   width: 100%;
