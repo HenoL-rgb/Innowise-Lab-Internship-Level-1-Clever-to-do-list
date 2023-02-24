@@ -1,38 +1,13 @@
 import React, { Suspense, useState } from "react";
 import { useCurrentTasks } from "../hooks/useCurrentTasks";
 import TaskListItem from "./TaskListItem";
-import styled from "styled-components";
-import { taskType } from "../types/types";
+import { tasksProps, taskType } from "../types/types";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { useAuth } from "../hooks/useAuth";
 import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
 import { setCurrentDay } from "../store/slices/currentDaySlice";
-
-const StyledTasksList = styled.ul`
-  position: relative;
-  list-style: none;
-  overflow-y: scroll;
-  display: flex;
-  flex-direction: column;
-  row-gap: 2px;
-  ::-webkit-scrollbar {
-    display: none;
-  }
-`;
-
-const TasksListWrapper = styled.div`
-  position: relative;
-  padding: 10px 0 20px;
-  height: 450px;
-  display: flex;
-  flex-direction: column;
-  row-gap: 20px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-`;
-type tasksProps = {
-  days: any[];
-};
+import { TasksListWrapper, StyledTasksList } from "./styles/TasksStyles";
 
 export default function Tasks({ days }: tasksProps) {
   const dayTasks = useCurrentTasks(days);

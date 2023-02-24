@@ -1,28 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import Day from "./Day";
-import styled from "styled-components";
-import { calendarDaysType, useDays } from "../hooks/useDays";
+import { useDays } from "../hooks/useDays";
 import { setCurrentDay } from "../store/slices/currentDaySlice";
 import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
-import { dayType, taskType } from "../types/types";
-
-const DaysListWrapper = styled.ul`
-  width: 100%;
-  display: flex;
-  column-gap: 15px;
-  list-style: none;
-  overflow-x: scroll;
-  padding: 10px 0 20px;
-  ::-webkit-scrollbar {
-    display: none;
-  }
-`;
-
-type daysListProps = {
-  days: dayType[];
-  currentMonth: number;
-  currentYear: number;
-};
+import { calendarDaysType, daysListProps, dayType, taskType } from "../types/types";
+import { DaysListWrapper } from "./styles/DaysListStyles";
 
 export default function DaysList({
   days,

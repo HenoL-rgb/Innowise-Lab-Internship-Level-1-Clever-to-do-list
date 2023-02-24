@@ -35,6 +35,48 @@ export type currDayTypes = {
   uncompleted: boolean,
 }
 
+export type tasksProps = {
+  days: any[];
+};
+
+export type dayProps = {
+  completed: boolean;
+  uncompleted: boolean;
+  date: calendarDaysType;
+  isCurrent: boolean;
+  onClick: (day: number) => void;
+};
+
+export type calendarDaysType = {
+  day: number;
+  month: number;
+  year: number;
+  id: string;
+};
+
+
+export type daysListProps = {
+  days: dayType[];
+  currentMonth: number;
+  currentYear: number;
+};
+
+export type formProps = {
+  title: string;
+  handleClick: (email: string, password: string) => void;
+  setLoader: () => void;
+};
+
+export type signBtnProps = {
+  onClick: () => void;
+};
+
+export type taskListItemProps = {
+  task: taskType;
+  completed: boolean;
+  handleChange: (task: taskType) => void;
+  handleDelete: (task: taskType) => void;
+};
 // export async function retrieveDays(email: string, month: number, year: number) {
 //   const days: dayType[] = [];
 //   const q = query(collection(db, email), where("month", "==", month), where("year", "==", year));

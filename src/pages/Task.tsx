@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { db } from "../firebase";
 import { doc, setDoc, collection, updateDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
-import { taskType } from "../types/types";
+import { currDayTypes, currTaskTypes, dayType, taskType } from "../types/types";
 import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
 import { setCurrentTask } from "../store/slices/currentTaskSlice";
 import { setCurrentDay } from "../store/slices/currentDaySlice";
@@ -19,13 +19,13 @@ export default function Task() {
     reset,
   } = useForm();
 
-  const email = useAppSelector((state) => state.user.email);
-  const { day, month, year, id } = useAppSelector((state) => state.currentDay);
-  const { taskId, title, todo } = useAppSelector((state) => state.currentTask);
+  const email: string = useAppSelector((state) => state.user.email);
+  const { day, month, year, id }: currDayTypes = useAppSelector((state) => state.currentDay);
+  const { taskId, title, todo }: currTaskTypes = useAppSelector((state) => state.currentTask);
   const [loading, setLoading] = useState(false);
 
   const mode = taskId ? "Update" : "Save";
-  const days = useAppSelector((state) => state.task.tasks);
+  const days: dayType[] = useAppSelector((state) => state.task.tasks);
   const currentDay = days.find((day) => day.id === id);
   const currentDayTasks: taskType[] = currentDay ? currentDay.tasks : [];
 
@@ -41,13 +41,14 @@ export default function Task() {
       updateExistedTask(data);
     }
   }
+  
   function onSubmit(data: any) {
     //currDayId && taskId ->
     //currDayId !task ->
     //!currDayId !task
     setLoading(true);
+    reset();
     updateTasks(data).then(() => {
-      reset();
       navigate("/");
       setLoading(false);
     });

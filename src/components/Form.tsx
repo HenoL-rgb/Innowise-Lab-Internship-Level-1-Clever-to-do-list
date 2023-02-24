@@ -1,44 +1,9 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
-import styled from "styled-components";
 import { ErrorStyle } from "../pages/styles/TaskStyles";
-
-type formProps = {
-  title: string;
-  handleClick: (email: string, password: string) => void;
-  setLoader: () => void;
-};
-
-const StyledForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  row-gap: 10px;
-  width: 100%;
-  & input {
-    width: 100%;
-    max-width: 420px;
-    padding: 10px 12px;
-    outline: none;
-    border-radius: 5px;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    font-size: 16px;
-  }
-  & input[type="submit"] {
-    margin-top: 15px;
-    background-color: #fc6722;
-    font-size: 18px;
-    width: 30%;
-    min-width: min-content;
-    color: white;
-    border: 0;
-    cursor: pointer;
-    &:active {
-      background-color: #ff8750;
-    }
-  }
-`;
+import { formProps } from "../types/types";
+import { StyledForm } from "./styles/FormStyles";
 
 export default function Form({ title, handleClick, setLoader }: formProps) {
   const {

@@ -29,12 +29,12 @@ export default function Tassker() {
   const days: dayType[] = useAppSelector((state) => state.task.tasks);
 
   const currentDate: currDayTypes = useAppSelector((state) => state.currentDay);
-  const realDate = new Date();
-  const realDateString = realDate.toLocaleDateString().split(".");
+  const realDate: Date = new Date();
+  const realDateString: string[] = realDate.toLocaleDateString().split(".");
 
   const currM = new Date(currentDate.year, currentDate.month, currentDate.day);
-  const currentDateString = currM.toString().split(" ");
-  const currentDateLocalString = currM.toLocaleDateString().split(".");
+  const currentDateString: string[] = currM.toString().split(" ");
+  const currentDateLocalString: string[] = currM.toLocaleDateString().split(".");
 
   const q = query(
     collection(db, email),
@@ -95,12 +95,13 @@ export default function Tassker() {
   }
 
   function handleCalendarClick() {
-    if(!calRef.current) return;
+    if (!calRef.current) return;
     calRef.current?.focus();
   }
 
   function handleCalendarChange(e: any) {
     const newDate = e.target.value.split("-");
+    if(!newDate.toString()) return;
     dispatch(
       setCurrentDay({
         day: +newDate[2],

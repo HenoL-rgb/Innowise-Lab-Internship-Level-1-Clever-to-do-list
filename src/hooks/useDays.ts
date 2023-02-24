@@ -1,11 +1,7 @@
 import { useState, useEffect } from "react";
+import { calendarDaysType } from "../types/types";
 
-export type calendarDaysType = {
-  day: number;
-  month: number;
-  year: number;
-  id: string;
-};
+
 export function useDays(currentMonth: number, currentYear: number) {
   const [daysList, setDaysList] = useState<calendarDaysType[]>([]);
 
