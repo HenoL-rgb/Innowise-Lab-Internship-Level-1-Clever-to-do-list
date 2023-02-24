@@ -1,27 +1,27 @@
 import React, { useEffect, useRef } from "react";
-import AddTaskBtn from "../components/AddTaskBtn";
-import DaysList from "../components/DaysList";
-import Tasks from "../components/Tasks";
+import AddTaskBtn from "../../components/AddTaskBtn/AddTaskBtn";
+import DaysList from "../../components/DayList/DaysList";
+import Tasks from "../../components/Tasks/Tasks";
 import "firebase/firestore";
-import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
-import SignButton from "../components/SignButton";
-import { removeUser } from "../store/slices/userSlice";
-import { currDayTypes, dayType } from "../types/types";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux-hooks";
+import SignButton from "../../components/SignButton/SignButton";
+import { removeUser } from "../../store/slices/userSlice";
+import { currDayTypes, dayType } from "../../types/types";
 import { Bars } from "react-loader-spinner";
-import { setTasks } from "../store/slices/tasksSlice";
+import { setTasks } from "../../store/slices/tasksSlice";
 import { useCollectionData } from "react-firebase-hooks/firestore";
-import { setCurrentDay } from "../store/slices/currentDaySlice";
+import { setCurrentDay } from "../../store/slices/currentDaySlice";
 import { IconButton } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import { collection, query, where } from "firebase/firestore";
-import { db } from "../firebase";
+import { db } from "../../firebase";
 import {
   TasskerWrapper,
   Header,
   LoaderWrapper,
   CalendarInput,
-} from "./styles/TasskerStyles";
+} from "./TasskerStyles";
 
 export default function Tassker() {
   const dispatch = useAppDispatch();

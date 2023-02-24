@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { StyledHeader } from "./styles/HeaderStyles";
+import { StyledHeader } from "./HeaderStyles";
 
 export default function Header() {
   return (

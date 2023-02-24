@@ -1,15 +1,15 @@
 import React from "react";
-import { taskListItemProps } from "../types/types";
+import { taskListItemProps } from "../../types/types";
 import Checkbox from "@mui/material/Checkbox";
-import { useAppDispatch } from "../hooks/redux-hooks";
+import { useAppDispatch } from "../../hooks/redux-hooks";
 import { IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
 import { useNavigate } from "react-router-dom";
-import { setCurrentTask } from "../store/slices/currentTaskSlice";
-import { StyledTasksListItem } from "./styles/TaskListItemStyles";
-import { themeSettings } from "../themeSetting";
+import { setCurrentTask } from "../../store/slices/currentTaskSlice";
+import { StyledTasksListItem } from "./TaskListItemStyles";
+import { themeSettings } from "../../themeSetting";
 
 const theme = {
   completed: { ...themeSettings.task.completed },

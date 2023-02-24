@@ -1,16 +1,29 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../hooks/redux-hooks";
-import { setUser } from "../store/slices/userSlice";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import Form from "../components/Form";
+import { useAppDispatch } from "../../hooks/redux-hooks";
+import { setUser } from "../../store/slices/userSlice";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import Form from "../../components/Form/Form";
 import { Bars } from "react-loader-spinner";
-import { LoaderWrapper, SignWrapper } from "./styles/SignStyles";
+import { LoaderWrapper, LoginWrapper } from "./LoginStyles";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-export default function Sign() {
-  const navigate = useNavigate();
+export default function Login() {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const [loader, setLoader] = useState(false);
+  const notify = () =>
+    toast.error("Incorrect data!", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
 
   function handleLoader() {
     setLoader(!loader);
@@ -19,7 +32,7 @@ export default function Sign() {
   function handleLogin(email: string, password: string) {
     const auth = getAuth();
 
-    createUserWithEmailAndPassword(auth, email, password)
+    signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
         user.getIdToken().then((accessToken) => {
@@ -33,7 +46,12 @@ export default function Sign() {
           navigate("/");
         });
       })
-      .catch();
+      .catch((error) => {
+        notify();
+        setLoader(false);
+        navigate("/login");
+      });
+    return;
   }
 
   return loader ? (
@@ -49,16 +67,17 @@ export default function Sign() {
       />
     </LoaderWrapper>
   ) : (
-    <SignWrapper>
+    <LoginWrapper>
+      
       <div>
-        <h1>Sign up</h1>
+        <h1>Sign in</h1>
         <Form
-          title="sign up"
+          title="sign in"
           handleClick={handleLogin}
           setLoader={handleLoader}
         />
-        <Link to="/">Login</Link>
+        <Link to="/sign">Register</Link>
       </div>
-    </SignWrapper>
+    </LoginWrapper>
   );
 }

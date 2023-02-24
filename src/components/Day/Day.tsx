@@ -1,7 +1,7 @@
 import React from "react";
-import { themeSettings } from "../themeSetting";
-import { dayProps } from "../types/types";
-import { DayWrapper, CompletionList, StyledCircle } from "./styles/DayStyles";
+import { themeSettings } from "../../themeSetting";
+import { dayProps } from "../../types/types";
+import { DayWrapper, CompletionList, StyledCircle } from "./DayStyles";
 
 export default function Day({
   completed,

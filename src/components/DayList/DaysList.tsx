@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
-import Day from "./Day";
-import { useDays } from "../hooks/useDays";
-import { setCurrentDay } from "../store/slices/currentDaySlice";
-import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
+import Day from "../Day/Day";
+import { useDays } from "../../hooks/useDays";
+import { setCurrentDay } from "../../store/slices/currentDaySlice";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux-hooks";
 import {
   calendarDaysType,
   daysListProps,
-} from "../types/types";
-import { DaysListWrapper } from "./styles/DaysListStyles";
+} from "../../types/types";
+import { DaysListWrapper } from "./DaysListStyles";
 
 export default function DaysList({
   days,

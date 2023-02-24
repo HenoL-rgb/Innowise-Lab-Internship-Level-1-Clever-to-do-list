@@ -1,8 +1,8 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { ErrorStyle } from "../pages/styles/TaskStyles";
-import { formProps } from "../types/types";
-import { StyledForm } from "./styles/FormStyles";
+import { ErrorStyle } from "../../pages/Task/TaskStyles";
+import { formProps } from "../../types/types";
+import { StyledForm } from "./FormStyles";
 
 export default function Form({ title, handleClick, setLoader }: formProps) {
   const {

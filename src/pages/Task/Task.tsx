@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { db } from "../firebase";
+import { db } from "../../firebase";
 import { doc, setDoc, collection, updateDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
-import { currDayTypes, currTaskTypes, dayType, taskType } from "../types/types";
-import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
-import { setCurrentTask } from "../store/slices/currentTaskSlice";
-import { setCurrentDay } from "../store/slices/currentDaySlice";
+import { currDayTypes, currTaskTypes, dayType, taskType } from "../../types/types";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux-hooks";
+import { setCurrentTask } from "../../store/slices/currentTaskSlice";
+import { setCurrentDay } from "../../store/slices/currentDaySlice";
 import { Bars } from "react-loader-spinner";
-import { StyledTaskForm, StyledBackButton, ErrorStyle } from "./styles/TaskStyles";
-import { themeSettings } from "../themeSetting";
+import { StyledTaskForm, StyledBackButton, ErrorStyle } from "./TaskStyles";
+import { themeSettings } from "../../themeSetting";
 
 
 export default function Task() {

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import "./App.css";
 import styled from "styled-components";
-import Tassker from "./pages/Tassker";
-import Header from "./components/Header";
+import Tassker from "./pages/Tassker/Tassker";
+import Header from "./components/Header/Header";
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -11,9 +11,9 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import { Outlet } from "react-router";
-import Sign from "./pages/Sign";
-import Login from "./pages/Login";
-import Task from "./pages/Task";
+import Sign from "./pages/Sign/Sign";
+import Login from "./pages/Login/Login";
+import Task from "./pages/Task/Task";
 import { useAuth } from "./hooks/useAuth";
 import { ToastContainer } from "react-toastify";
 import { themeSettings } from "./themeSetting";

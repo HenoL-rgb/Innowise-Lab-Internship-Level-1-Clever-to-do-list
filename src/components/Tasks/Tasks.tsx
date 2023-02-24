@@ -1,13 +1,13 @@
 import React from "react";
-import { useCurrentTasks } from "../hooks/useCurrentTasks";
-import TaskListItem from "./TaskListItem";
-import { tasksProps, taskType } from "../types/types";
+import { useCurrentTasks } from "../../hooks/useCurrentTasks";
+import TaskListItem from "../TaskListItem/TaskListItem";
+import { tasksProps, taskType } from "../../types/types";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
-import { db } from "../firebase";
-import { useAuth } from "../hooks/useAuth";
-import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
-import { setCurrentDay } from "../store/slices/currentDaySlice";
-import { TasksListWrapper, StyledTasksList } from "./styles/TasksStyles";
+import { db } from "../../firebase";
+import { useAuth } from "../../hooks/useAuth";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux-hooks";
+import { setCurrentDay } from "../../store/slices/currentDaySlice";
+import { TasksListWrapper, StyledTasksList } from "./TasksStyles";
 
 export default function Tasks({ days }: tasksProps) {
   const dayTasks = useCurrentTasks(days);
