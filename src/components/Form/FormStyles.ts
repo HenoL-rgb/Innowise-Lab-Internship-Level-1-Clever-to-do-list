@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { themeSettings } from "../../themeSetting";
 
 export const StyledForm = styled.form`
   display: flex;
@@ -17,7 +18,7 @@ export const StyledForm = styled.form`
   }
   & input[type="submit"] {
     margin-top: 15px;
-    background-color: #fc6722;
+    background-color: ${themeSettings.buttons.default};
     font-size: 18px;
     width: 30%;
     min-width: min-content;
@@ -25,7 +26,10 @@ export const StyledForm = styled.form`
     border: 0;
     cursor: pointer;
     &:active {
-      background-color: #ff8750;
+      background-color: ${themeSettings.buttons.active};
+    }
+    &:hover {
+      background-color: ${themeSettings.buttons.hover}
     }
   }
 `;
