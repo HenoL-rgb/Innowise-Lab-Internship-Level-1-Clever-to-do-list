@@ -13,8 +13,8 @@ export default function Login() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [loader, setLoader] = useState(false);
-  const notify = () =>
-    toast.error("Incorrect data!", {
+  const notify = (error: string) =>
+    toast.error(error, {
       position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
@@ -48,7 +48,7 @@ export default function Login() {
         });
       })
       .catch((error) => {
-        notify();
+        notify(error.code);
         setLoader(false);
         navigate("/login");
       });
