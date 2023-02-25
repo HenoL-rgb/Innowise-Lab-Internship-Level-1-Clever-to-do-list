@@ -43,6 +43,7 @@ export default function Login() {
               token: accessToken,
             })
           );
+          localStorage.setItem('userInfo', JSON.stringify({...user, accessToken}))
           navigate("/");
         });
       })

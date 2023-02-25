@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import styled from "styled-components";
 import Tassker from "./pages/Tassker/Tassker";
@@ -17,6 +17,8 @@ import Task from "./pages/Task/Task";
 import { useAuth } from "./hooks/useAuth";
 import { ToastContainer } from "react-toastify";
 import { themeSettings } from "./themeSetting";
+import { useAppDispatch } from "./hooks/redux-hooks";
+import { setUser } from "./store/slices/userSlice";
 
 const AppWrapper = styled.div`
   position: relative;
@@ -57,6 +59,14 @@ const publicRouter = createBrowserRouter(
 );
 
 function App() {
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    const isUser = localStorage.getItem('userInfo');
+    if(isUser) {
+      dispatch(setUser({...JSON.parse(isUser)}))
+    }
+  }, [])
+  
   const { isAuth } = useAuth();
   return (
     <AppWrapper>
