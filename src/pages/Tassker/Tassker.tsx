@@ -112,10 +112,15 @@ export default function Tassker() {
     );
   }
 
+  function handleLogout() {
+    dispatch(removeUser())
+    localStorage.removeItem('userInfo')
+  }
+
   const calRef = useRef<HTMLInputElement>(null);
   return (
     <TasskerWrapper>
-      <SignButton onClick={() => dispatch(removeUser())} />
+      <SignButton onClick={handleLogout} />
       <Header>
         <IconButton
           onClick={handlePrev}
